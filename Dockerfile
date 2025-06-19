@@ -71,7 +71,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     rm -rf .npm .cache .config .local && \
     cd /app; \
   fi
-  
+
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
     export DEBIAN_FRONTEND=noninteractive && \
     echo '--- Updating repositories' && \

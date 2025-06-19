@@ -1,7 +1,7 @@
 .stf-logcat-table {
   background: #fff;
-  position: absolute;
-  top: 69px;
+  position: relatice;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -15,7 +15,7 @@
 }
 
 .stf-logcat-table tbody tr {
-  border-bottom: 1px solid rgb(240, 240, 240);
+  border-bottom: 1px solid #303030;
 }
 
 .stf-logcat-table tbody td {
@@ -24,13 +24,9 @@
 }
 
 .stf-logcat-table .console-message-text {
-  font-size: 11px !important;
-  font-family: Menlo, monospace;
+  font-size: 10px !important;
+  /* font-family: Menlo, monospace; */
   white-space: pre-wrap;
-}
-
-.stf-logcat-table .console-message-text td {
-  /*color: rgb(48, 57, 66);*/
 }
 
 /*.stf-logcat-table tr td:first-child {*/
@@ -53,15 +49,15 @@
 }
 
 .stf-logcat-table .log-Verbose {
-  color: blueviolet;
+  color: rgb(97, 163, 204);
 }
 
 .stf-logcat-table .log-Debug {
-  color: #020c7d;
+  color: #6d6f83;
 }
 
 .stf-logcat-table .log-Info {
-  color: #177d1c;
+  color: #6eb272;
 }
 
 .stf-logcat-table .log-Warn {
@@ -69,9 +65,9 @@
 }
 
 .stf-logcat-table .log-Error {
-  color: red;
+  color: rgb(234, 94, 94);
 }
 
 .stf-logcat-table .log-Fatal {
-  color: darkcyan;
+  color: rgb(255, 0, 0);
 }

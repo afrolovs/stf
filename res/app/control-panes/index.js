@@ -34,7 +34,7 @@ module.exports = angular.module('control-panes', [
       })
       // TODO: add standalone
       .when('/c/:serial', {
-        template: require('./control-panes.pug'),
+        template: require('./control-panes-legacy.pug'),
         controller: 'ControlPanesCtrl'
       })
   }])

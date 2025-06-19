@@ -11,7 +11,7 @@ describe('clearButton', function() {
 
   it('should display a text label', function() {
     var element = compile('<clear-button />')(scope)
-    expect(element.find('span').text()).toBe('Clear')
+    expect(element.find('span').text()).toBe('Очистить')
   })
 
   it('should display a trash icon', function() {

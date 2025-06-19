@@ -5,7 +5,71 @@
 module.exports =
   function ControlPanesController($scope, $http, gettext, $routeParams,
     $timeout, $location, DeviceService, GroupService, ControlService,
-    StorageService, FatalMessageService, SettingsService) {
+    StorageService, FatalMessageService, SettingsService, LogcatService) {
+
+    $scope.showScreen = true
+
+    $scope.groupTracker = DeviceService.trackGroup($scope)
+
+    $scope.groupDevices = $scope.groupTracker.devices
+
+    $scope.deviceControls = {
+      tryToRotate: function (rotation) {
+        if (!$scope.control || !$scope.device) return;
+
+        if (rotation === 'portrait') {
+          $scope.control.rotate(0);
+        } else if (rotation === 'landscape') {
+          $scope.control.rotate(90);
+        }
+      },
+      currentRotation: 'portrait',
+
+      kickDevice: function (device, $event) {
+        if ($event) $event.stopPropagation();
+
+        if (Object.keys(LogcatService.deviceEntries).includes(device.serial)) {
+          LogcatService.deviceEntries[device.serial].allowClean = true;
+        }
+
+        if (!device || !$scope.device) {
+          alert('No device found');
+          return;
+        }
+
+        try {
+          // If we're trying to kick current device
+          if (device.serial === $scope.device.serial) {
+            // If there is more than one device left
+            if ($scope.groupDevices.length > 1) {
+              // Control first free device first
+              var firstFreeDevice = _.find($scope.groupDevices, function (dev) {
+                return dev.serial !== $scope.device.serial;
+              });
+              $scope.controlDevice(firstFreeDevice);
+
+              // Then kick the old device
+              GroupService.kick(device).then(function () {
+                $scope.$digest();
+              });
+            } else {
+              // Kick the device
+              GroupService.kick(device).then(function () {
+                $scope.$digest();
+              });
+              $location.path('/devices/');
+            }
+          } else {
+            GroupService.kick(device).then(function () {
+              $scope.$digest();
+            });
+          }
+        } catch (e) {
+          alert(e.message);
+        }
+      }
+    };
+
 
     var sharedTabs = [
       {
@@ -64,10 +128,10 @@ module.exports =
     // TODO: Move this out to Ctrl.resolve
     function getDevice(serial) {
       DeviceService.get(serial, $scope)
-        .then(function(device) {
+        .then(function (device) {
           return GroupService.invite(device)
         })
-        .then(function(device) {
+        .then(function (device) {
           $scope.device = device
           $scope.control = ControlService.create(device, device.channel)
 
@@ -78,8 +142,8 @@ module.exports =
 
           return device
         })
-        .catch(function() {
-          $timeout(function() {
+        .catch(function () {
+          $timeout(function () {
             $location.path('/')
           })
         })
@@ -87,14 +151,42 @@ module.exports =
 
     getDevice($routeParams.serial)
 
-    $scope.$watch('device.state', function(newValue, oldValue) {
+    $scope.$watch('device.state', function (newValue, oldValue) {
       if (newValue !== oldValue) {
-/*************** fix bug: it seems automation state was forgotten ? *************/
+        /*************** fix bug: it seems automation state was forgotten ? *************/
         if (oldValue === 'using' || oldValue === 'automation') {
-/******************************************************************************/
+          /******************************************************************************/
           FatalMessageService.open($scope.device, false)
         }
       }
     }, true)
 
+
+    // Добавляем в ControlPanesController
+    $scope.isPortrait = function (val) {
+      const value = val ?? $scope.device?.display?.rotation;
+      return (value === 0 || value === 180);
+    };
+
+    $scope.isLandscape = function (val) {
+      const value = val ?? $scope.device?.display?.rotation;
+      return (value === 90 || value === 270);
+    };
+
+    $scope.tryToRotate = function (rotation) {
+      if (!$scope.control || !$scope.device) return;
+
+      if (rotation === 'portrait') {
+        $scope.control.rotate(0);
+      } else if (rotation === 'landscape') {
+        $scope.control.rotate(90);
+      }
+    };
+
+    $scope.currentRotation = 'portrait';
+
+    $scope.$watch('device.display.rotation', function (newValue) {
+      const isPortrait = newValue === 0 || newValue === 180;
+      $scope.deviceControls.currentRotation = isPortrait ? 'portrait' : 'landscape';
+    });
   }

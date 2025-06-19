@@ -1,9 +1,13 @@
-//
-  Copyright © 2024 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
-//
+<!DOCTYPE html>
+
+script.
+  window.APP_CONFIG = {
+    deviceFarmUrl: "#{process.env.DEVICE_FARM_URL}",
+    isTvMode: "#{process.env.FARM_IS_TV_MODE}",
+  }
 
 doctype html
-html(ng-app='app')
+html(ng-app='app', data-mdb-theme="dark")
   head
     meta(charset='utf-8')
     base(href='/')
@@ -13,22 +17,160 @@ html(ng-app='app')
     meta(name='apple-mobile-web-app-title', content='STF')
     meta(name='format-detection', content='telephone=no')
     meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
-    link(href='static/logo/exports/STF-128.png', rel='apple-touch-icon')
+    link(href='static/logo/exports/favicon.ico', rel='apple-touch-icon')
 
-    title(ng-bind='pageTitle ? "STF - " + pageTitle : "STF"') STF
+    //- title() Device Ranch – Android Mobile
   body(ng-cloak).bg-1.fill-height.unselectable
     div(ng-controller='LayoutCtrl', basic-mode, admin-mode, standalone, landscape).fill-height
-      .pane-top.fill-height(fa-pane)
-        .pane-top-bar(fa-pane, pane-id='menu', pane-anchor='north',
-          pane-size='{{!$root.basicMode && !$root.standalone ? 44 : 0 }}px',
+      //- .pane-top.fill-height(fa-pane)
+        //- .pane-top-bar(fa-pane, pane-id='menu', pane-anchor='north',
+        //-   pane-size='{{!$root.basicMode && !$root.standalone ? 44 : 0 }}px',
 
-          pane-handle='')
-          div(ng-include='"menu.pug"')
+        //-   pane-handle='')
+        //-   div(ng-include='"menu.pug"')
 
-        .pane-center(fa-pane, pane-id='main', pane-anchor='center').fill-height
-          socket-state
-          div(growl)
-          div(ng-view).fill-height
+      .pane-center(fa-pane, pane-id='main', pane-anchor='center').fill-height
+        //- socket-state
+        //- div(growl)
+        div(ng-view).fill-height
 
     script(src='/app/api/v1/state.js')
     script(src='static/app/build/entry/app.entry.js')
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js")
+
+    script.
+      // Проверяем, что кастомный UI загружен
+      async function waitForElement(id) {
+        let element = null;
+        let attempts = 0;
+        const maxAttempts = 10;
+        const baseDelay = 300;
+
+        while (!element && attempts < maxAttempts) {
+          attempts++;
+          // Проверяем элемент
+          element = document.getElementById(id);
+
+          if (!element) {
+            // Вычисляем прогрессивную задержку
+            const delay = baseDelay * Math.pow(1.2, attempts);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+
+        if (element) {
+          console.log(`Экран девайса ${id} найден после ${attempts} попыток`);
+          return element;
+        } else {
+          console.error(`Экран девайса ${id} не найден после ${maxAttempts} попыток!`);
+          return null;
+        }
+      }
+      waitForElement('deviceWrapper').then(element => {
+
+          // tippy
+
+          const singleton = tippy.createSingleton(tippy('[data-tippy-content]'), {
+              inertia: true,
+              arrow: false,
+              offset: [0, 3],
+              allowHTML: true,
+              moveTransition: 'fade 0.2s ease-in-out',
+              theme: 'okko',
+              //- interactive: true,
+              appendTo: document.body,
+              popperOptions: {
+                  positionFixed: true,
+              }
+          });
+          htmlHelp = `
+              <div style='margin: 1em;'>
+                  <div style='margin-bottom: 1em;font-size: 14px'><b>Что у нас тут есть?</b></div>
+                  <li>Управляй девайсом с клавиатуры - для этого нажми мышкой на его экран<br style="margin-bottom: 0.5em">
+                      Доступны: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>ESC</kbd> и <kbd>ENTER</kbd></li>
+                  <li>Кнопки управления девайсом находятся внизу – наведи на них, чтобы увидеть подсказку</li>
+                  <li>Остальной функционал доступен в меню справа. Описание разделов можно включить, нажав на иконку бутерброда</li>
+                  <li>Эту подсказку можно закрыть, нажав в любое место экрана</li>
+              </div>
+          `;
+          help_modal = document.querySelector('.menu-center-left');
+          help_modal.setAttribute('data-tippy-content', htmlHelp);
+          singleton.show(help_modal);
+          singleton.setContent(htmlHelp);
+
+          // Оснастка по UI
+
+          const sideMenu = document.getElementById('sideMenu');
+          const sideMenuToggle = document.getElementById('sideMenuToggle');
+          const sideMenuSections = document.querySelectorAll('.side-menu-section');
+          const sidePanelContents = document.querySelectorAll('.side-panel-content');
+          const deviceWrapper = document.getElementById('deviceWrapper');
+
+          let currentActivePanel = null;
+
+          // Инициализация
+          init();
+
+          // Переключение режима бокового меню
+          sideMenuToggle.addEventListener('click', function () {
+              sideMenu.classList.toggle('expanded');
+              updateLayout();
+          });
+
+          // Выбор раздела в боковом меню
+          sideMenuSections.forEach(section => {
+              section.addEventListener('click', function () {
+                  const panelId = this.getAttribute('data-panel');
+
+                  // Убираем активный класс у всех разделов
+                  sideMenuSections.forEach(s => s.classList.remove('active'));
+                  // Убираем активный класс у всех панелей
+                  sidePanelContents.forEach(p => p.classList.remove('active'));
+
+                  // Делаем текущий раздел активным
+                  this.classList.add('active');
+
+                  // Активируем соответствующую панель контента
+                  if (panelId) {
+                      const panel = document.getElementById(panelId);
+                      if (panel) {
+                          panel.classList.add('active');
+                          currentActivePanel = panel;
+                      }
+                  }
+
+                  updateLayout();
+              });
+          });
+
+          // Функция инициализации
+          function init() {
+              sideMenu.classList.toggle('expanded');
+              window.addEventListener('resize', updateLayout);
+          }
+
+          // Функция для обновления макета
+          function updateLayout() {
+              const sideMenuWidth = sideMenu.offsetWidth;
+              const panelWidth = currentActivePanel ? currentActivePanel.offsetWidth : 0;
+
+              // Обновляем ширину wrapper устройства
+              deviceWrapper.style.width = `calc(100% - ${sideMenuWidth + panelWidth}px)`;
+              deviceWrapper.style.marginRight = `${panelWidth}px`;
+
+              // Автомасштабирование экрана, чтобы он помещался в доступное пространство
+              const containerWidth = deviceWrapper.offsetWidth - 150; // минус padding
+              const containerHeight = deviceWrapper.offsetHeight - 150;
+
+              const deviceWidth = parseInt(deviceWrapper.style.width);
+              const deviceHeight = parseInt(deviceWrapper.style.height);
+
+              const widthScale = containerWidth / deviceWidth;
+              const heightScale = containerHeight / deviceHeight;
+              currentScale = Math.min(widthScale, heightScale);
+
+              deviceWrapper.style.transform = `scale(${currentScale})`;
+          }
+      });

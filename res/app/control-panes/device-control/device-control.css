@@ -11,9 +11,7 @@
 }
 
 device-screen {
-  width: 100%;
-  height: 100%;
-  background: gray;
+  background: black;
   position: relative;
   display: block;
   overflow: hidden;
@@ -161,7 +159,7 @@ device-screen input {
   top: -9999px;
   left: -9999px;
   ime-mode: disabled;
-  inputmode: verbatim;
+  /* inputmode: verbatim; */
 }
 
 .stf-device-control .dragover {
@@ -281,3 +279,4 @@ device-screen input {
   -ms-transition: none !important;
   transition: none !important;
 }
+/* */

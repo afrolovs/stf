@@ -1,0 +1,15 @@
+{
+  "watch": [
+    "lib",
+    "res",
+    "bin"
+  ],
+  "ext": "js,html,css",
+  "ignore": [
+    "node_modules"
+  ],
+  "exec": "stf local --adb-host adb --public-ip 192.168.2.35 --provider-min-port 7400 --provider-max-port 7500 --allow-remote",
+  "events": {
+    "restart": "npm run build"
+  }
+}

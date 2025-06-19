@@ -9,108 +9,152 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
 
   $scope.groupDevices = $scope.groupTracker.devices
 
-  $scope.$on('$locationChangeStart', function(event, next, current) {
+  $scope.$on('$locationChangeStart', function (event, next, current) {
     $scope.LogcatService = LogcatService
     $rootScope.LogcatService = LogcatService
   })
 
-  $scope.kickDevice = function(device) {
-    if (Object.keys(LogcatService.deviceEntries).includes(device.serial)) {
-      LogcatService.deviceEntries[device.serial].allowClean = true
-    }
 
-    $scope.LogcatService = LogcatService
-    $rootScope.LogcatService = LogcatService
+  $scope.getActualDisplayDimensions = function () {
+    if (!$scope.device || !$scope.device.display) return { width: 0, height: 0 };
 
-    if (!device || !$scope.device) {
-      alert('No device found')
-      return
-    }
+    const { width, height, rotation } = $scope.device.display;
 
-    try {
-      // If we're trying to kick current device
-      if (device.serial === $scope.device.serial) {
+    // Если поворот на 90° или 270°, меняем ширину и высоту местами
+    const isPortrait = rotation === 0 || rotation === 180;
+    return {
+      width: isPortrait ? width : height,
+      height: isPortrait ? height : width
+    };
+  };
 
-        // If there is more than one device left
-        if ($scope.groupDevices.length > 1) {
+  $scope.$watch('device.display.rotation', () => {
+    const { width, height } = $scope.getActualDisplayDimensions();
+    $scope.screenStyle = calculateScreenStyle(width, height);
+  });
 
-          // Control first free device first
-          var firstFreeDevice = _.find($scope.groupDevices, function(dev) {
-            return dev.serial !== $scope.device.serial
-          })
-          $scope.controlDevice(firstFreeDevice)
+  // Инициализация и слежение за изменениями
+  $scope.$watch('device.display', (display) => {
+    if (!display) return;
+    const { width, height } = $scope.getActualDisplayDimensions();
+    $scope.screenStyle = calculateScreenStyle(width, height);
+  }, true); // deep watch
 
-          // Then kick the old device
-          GroupService.kick(device).then(function() {
-            $scope.$digest()
-          })
-        } else {
-          // Kick the device
-          GroupService.kick(device).then(function() {
-            $scope.$digest()
-          })
-          $location.path('/devices/')
-        }
-      } else {
-        GroupService.kick(device).then(function() {
-          $scope.$digest()
-        })
-      }
-    } catch (e) {
-      alert(e.message)
-    }
+  function calculateScreenStyle(width, height) {
+    const maxHeight = window.innerHeight - 13 * 16; // 16 = 1em
+    const maxWidth = window.innerWidth - 20 * 16; // 16 = 1em
+    const aspectRatio = width / height;
+
+    return {
+      // 'max-width': `${maxWidth}px`,
+      'max-height': `${maxHeight}px`,
+      'aspect-ratio': aspectRatio,
+    };
   }
 
-  $scope.controlDevice = function(device) {
+  // Инициализация при загрузке
+  if ($scope.device?.display) {
+    const { width, height } = $scope.getActualDisplayDimensions();
+    $scope.screenStyle = calculateScreenStyle(width, height);
+  }
+
+  // $scope.kickDevice = function(device) {
+  //   if (Object.keys(LogcatService.deviceEntries).includes(device.serial)) {
+  //     LogcatService.deviceEntries[device.serial].allowClean = true
+  //   }
+
+  //   $scope.LogcatService = LogcatService
+  //   $rootScope.LogcatService = LogcatService
+
+  //   if (!device || !$scope.device) {
+  //     alert('No device found')
+  //     return
+  //   }
+
+  //   try {
+  //     // If we're trying to kick current device
+  //     if (device.serial === $scope.device.serial) {
+
+  //       // If there is more than one device left
+  //       if ($scope.groupDevices.length > 1) {
+
+  //         // Control first free device first
+  //         var firstFreeDevice = _.find($scope.groupDevices, function(dev) {
+  //           return dev.serial !== $scope.device.serial
+  //         })
+  //         $scope.controlDevice(firstFreeDevice)
+
+  //         // Then kick the old device
+  //         GroupService.kick(device).then(function() {
+  //           $scope.$digest()
+  //         })
+  //       } else {
+  //         // Kick the device
+  //         GroupService.kick(device).then(function() {
+  //           $scope.$digest()
+  //         })
+  //         $location.path('/devices/')
+  //       }
+  //     } else {
+  //       GroupService.kick(device).then(function() {
+  //         $scope.$digest()
+  //       })
+  //     }
+  //   } catch (e) {
+  //     alert(e.message)
+  //   }
+  // }
+
+  $scope.controlDevice = function (device) {
     $location.path('/control/' + device.serial)
   }
 
-  function isPortrait(val) {
-    var value = val
-    if (typeof value === 'undefined' && $scope.device) {
-      value = $scope.device.display.rotation
-    }
-    return (value === 0 || value === 180)
-  }
+  // function isPortrait(val) {
+  //   var value = val
+  //   if (typeof value === 'undefined' && $scope.device) {
+  //     value = $scope.device.display.rotation
+  //   }
+  //   return (value === 0 || value === 180)
+  // }
 
-  function isLandscape(val) {
-    var value = val
-    if (typeof value === 'undefined' && $scope.device) {
-      value = $scope.device.display.rotation
-    }
-    return (value === 90 || value === 270)
-  }
+  // function isLandscape(val) {
+  //   var value = val
+  //   if (typeof value === 'undefined' && $scope.device) {
+  //     value = $scope.device.display.rotation
+  //   }
+  //   return (value === 90 || value === 270)
+  // }
 
-  $scope.tryToRotate = function(rotation) {
-    if (rotation === 'portrait') {
-      $scope.control.rotate(0)
-      $timeout(function() {
-        if (isLandscape()) {
-          $scope.currentRotation = 'landscape'
-        }
-      }, 400)
-    } else if (rotation === 'landscape') {
-      $scope.control.rotate(90)
-      $timeout(function() {
-        if (isPortrait()) {
-          $scope.currentRotation = 'portrait'
-        }
-      }, 400)
-    }
-  }
+  // $scope.tryToRotate = function(rotation) {
+  //   if (rotation === 'portrait') {
+  //     $scope.control.rotate(0)
+  //     $timeout(function() {
+  //       if (isLandscape()) {
+  //         $scope.currentRotation = 'landscape'
+  //       }
+  //     }, 400)
+  //   } else if (rotation === 'landscape') {
+  //     $scope.control.rotate(90)
+  //     $timeout(function() {
+  //       if (isPortrait()) {
+  //         $scope.currentRotation = 'portrait'
+  //       }
+  //     }, 400)
+  //   }
+  // }
 
-  $scope.currentRotation = 'portrait'
+  // $scope.currentRotation = 'portrait'
 
-  $scope.$watch('device.display.rotation', function(newValue) {
-    if (isPortrait(newValue)) {
-      $scope.currentRotation = 'portrait'
-    } else if (isLandscape(newValue)) {
-      $scope.currentRotation = 'landscape'
-    }
-  })
+  // $scope.$watch('device.display.rotation', function(newValue) {
+  //   if (isPortrait(newValue)) {
+  //     $scope.currentRotation = 'portrait'
+  //   } else if (isLandscape(newValue)) {
+  //     $scope.currentRotation = 'landscape'
+  //   }
+  // })
 
   // TODO: Refactor this inside control and server-side
-  $scope.rotateLeft = function() {
+  $scope.rotateLeft = function () {
     var angle = 0
     if ($scope.device && $scope.device.display) {
       angle = $scope.device.display.rotation
@@ -127,7 +171,7 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
     }
   }
 
-  $scope.rotateRight = function() {
+  $scope.rotateRight = function () {
     var angle = 0
     if ($scope.device && $scope.device.display) {
       angle = $scope.device.display.rotation

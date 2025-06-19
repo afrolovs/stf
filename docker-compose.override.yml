@@ -1,0 +1,16 @@
+services:
+  stf:
+    user: root
+    build: .
+    volumes:
+      - .:/app  # Монтируем текущую директорию поверх /app в контейнере
+      - /app/node_modules  # Сохраняем оригинальные node_modules
+    environment:
+      - NODE_ENV=development
+      - SCREEN_GRABBER=minicap-bin
+      - DEVICE_FARM_URL=http://192.168.2.35:7100/#!/devices_legacy
+      - FARM_IS_TV_MODE=false
+    command: >
+      sh -c "cd /app &&
+      npm install --quiet --no-audit --no-fund &&
+      exec node_modules/.bin/nodemon"

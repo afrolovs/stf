@@ -15,15 +15,22 @@ module.exports = angular.module('device-list', [
   require('./customize').name,
   require('./search').name
 ])
-  .config(['$routeProvider', function($routeProvider) {
+  .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/devices', {
+        template: '',
+        controller: ['$window', function ($window) {
+          const url = window.APP_CONFIG.deviceFarmUrl
+          console.log('Redirecting to:', url)
+          $window.location.href = url
+        }]
+      })
+      .when('/devices_legacy', {
         template: require('./device-list.pug'),
         controller: 'DeviceListCtrl'
       })
   }])
-  .run(function(editableOptions) {
-    // bootstrap3 theme for xeditables
-    editableOptions.theme = 'bs3'
+  .run(function (editableOptions) {
+    editableOptions.theme = 'bs3' // Стиль для xeditables
   })
   .controller('DeviceListCtrl', require('./device-list-controller'))

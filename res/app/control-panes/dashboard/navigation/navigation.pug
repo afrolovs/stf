@@ -14,7 +14,7 @@
   .widget-content.padded
     form(enable-autofill, ng-submit='openUrl()')
       .input-group.url-input-container
-        input.form-control(type='text', name='textURL', placeholder='http://...',
+        input.form-control(type='text', name='textURL', placeholder='okko://...',
         autocomplete='url', ng-model='textURL', text-focus-select,
         autocapitalize='off', spellcheck='false', blur-element='blurUrl'
         accesskey='N', tabindex='10', ng-change='textUrlChanged()',
@@ -24,8 +24,8 @@
         .input-group-btn
           button(ng-click='openURL()', ng-disabled='!textURL', translate).btn.btn-primary-outline Open
 
-    .btn-group
-      .btn-group.browser-buttons(ng-click='nav.focusUrl = true')
-        label.btn.btn-default-outline(ng-repeat='browserRadio in device.browser.apps track by browserRadio.id', ng-model='$root.browser', uib-btn-radio='browserRadio',
-        uib-tooltip='{{browserRadio.name}} ({{browserRadio.developer}})')
-          img(ng-src='/static/app/browsers/icon/36x36/{{browserRadio.type}}.png', ng-show='browserRadio.type').browser-icon.pointer
+    //- .btn-group
+    //-   .btn-group.browser-buttons(ng-click='nav.focusUrl = true')
+    //-     label.btn.btn-default-outline(ng-repeat='browserRadio in device.browser.apps track by browserRadio.id', ng-model='$root.browser', uib-btn-radio='browserRadio',
+    //-     uib-tooltip='{{browserRadio.name}} ({{browserRadio.developer}})')
+    //-       img(ng-src='/static/app/browsers/icon/36x36/{{browserRadio.type}}.png', ng-show='browserRadio.type').browser-icon.pointer

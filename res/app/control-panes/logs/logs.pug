@@ -1,33 +1,35 @@
 .stf-logs(ng-controller='LogsCtrl')
-  .widget-container.fluid-height
-    .widget-content
-      table.table.table-condensed.logcat-filters-table(ng-show='true')
-        tr
-          td(width='1%')
-            button(ng-model='started', uib-btn-checkbox, title='{{"Start/Stop Logging"|translate}}').btn.btn-xs.btn-primary-outline
-              i.fa.fa-list-alt
-              span(ng-if='started') {{"Stop"|translate}}
-              span(ng-if='!started') {{"Get"|translate}}
-          td(width='6%')
-            select(ng-model='filters.priority', data-ng-options='l.name for l in filters.levelNumbers')
-              option(value='') {{"Logcat Level"|translate}}
-          td(width='10%')
-            input(ng-model='filters.date', type='text', placeholder='{{"Time"|translate}}', ng-keyup='validateDate(event=$event)').input-sm.form-control
-          td(width='8%', ng-if='$root.platform == "native"')
-            input(ng-model='filters.pid', type='text', placeholder='{{"PID"|translate}}').input-sm.form-control
-          td(width='8%', ng-if='$root.platform == "native"')
-            input(ng-model='filters.tid', type='text', placeholder='{{"TID"|translate}}').input-sm.form-control
-          td(width='14%', ng-if='$root.platform == "native"')
-            input(ng-model='filters.tag', type='text', placeholder='{{"Tag"|translate}}').input-sm.form-control
-          td(width='40%')
-            input(ng-model='filters.message', type='text', placeholder='{{"Text"|translate}}').input-sm.form-control
-          td(width='0')
-            button(ng-click='clearTable()', ng-disabled='false', title='{{"Clear"|translate}}').btn.btn-xs.btn-danger-outline
-              i.fa.fa-trash-o
-              span(translate)  Clear
-          td(width='0')
-            button(ng-click='saveLogs()', ng-disabled='false', title='{{"Save Logs"|translate}}').btn.btn-xs.btn-danger-outline
-              i.fa.fa-save
-              span(translate)  Save Logs
+  //- .widget-container.fluid-height
+  //-   .widget-content
+  table.table.table-condensed.logcat-filters-table(ng-show='true')
+    tr
+      td(width='1%')
+        //- button(ng-model='started', uib-btn-checkbox, title='{{"Start/Stop Logging"|translate}}').btn.btn-xs.btn-primary-outline
+        button.btn.btn-outline-secondary(ng-model='started', uib-btn-checkbox, title=' Включить', style="width:110px")
+          span.material-symbols-outlined.me-2(style="font-size: 6px; scale: 2") planner_review
+          span(ng-if='started') На  паузу
+          span(ng-if='!started') Включить
+      td(width='6%')
+        select.form-select.form-control(style="width: 11rem; height: 26px;padding: 2.5px 12px 3.68px;" ng-model='filters.priority', data-ng-options='l.name for l in filters.levelNumbers')
+          option(value='') {{"Критичность"}}
+      //- td(width='10%')
+      //-   input(ng-model='filters.date', type='text', placeholder='{{"Time"|translate}}', ng-keyup='validateDate(event=$event)').input-sm.form-control
+      //- td(width='8%', ng-if='$root.platform == "native"')
+      //-   input(ng-model='filters.pid', type='text', placeholder='{{"PID"|translate}}').input-sm.form-control
+      //- td(width='8%', ng-if='$root.platform == "native"')
+      //-   input(ng-model='filters.tid', type='text', placeholder='{{"TID"|translate}}').input-sm.form-control
+      //- td(width='14%', ng-if='$root.platform == "native"')
+      //-   input(ng-model='filters.tag', type='text', placeholder='{{"Tag"|translate}}').input-sm.form-control
+      td(width='60%')
+        input(style="height: 26px;", ng-model='filters.message', type='text', placeholder='{{"Фильтр (подстрока)"}}').input-sm.form-control
+      td(width='0')
+        //- button(ng-click='clearTable()', ng-disabled='false', title='{{"Clear"|translate}}').btn.btn-xs.btn-danger-outline
+        button.btn.btn-outline-secondary(ng-click='clearTable()' title='Очистить таблицу')
+          span.material-symbols-outlined.me-2(style="font-size: 6px; scale: 2") delete
+          span Очистить таблицу
+      //- td(width='0')
+      //-   button(ng-click='saveLogs()', ng-disabled='false', title='{{"Save Logs"|translate}}').btn.btn-xs.btn-danger-outline
+      //-     i.fa.fa-save
+      //-     span(translate)  Save Logs
 
-      logcat-table(add-row='lastEntry')
+  logcat-table(add-row='lastEntry', style="position: relative; height: 60vh; top: 0; background: transparent")

@@ -1,20 +1,58 @@
-.widget-container.fluid-height.stf-shell(ng-controller='ShellCtrl')
-  .heading
-    stacked-icon(icon='fa-terminal', color='color-darkgray')
-    span(translate) Shell
-    clear-button(ng-click='clear()', ng-disabled='!command && !data').btn-xs
-    help-icon(topic='Remote-Shell', uib-tooltip='{{"Executes remote shell commands" | translate}}')
+div(ng-controller='ShellCtrl')
+  //- .heading
+  //-   stacked-icon(icon='fa-terminal', color='color-darkgray')
+  //-   span(translate) Shell
+    //- clear-button(ng-click='clear()', ng-disabled='!command && !data').btn-xs
+    //- help-icon(topic='Remote-Shell', uib-tooltip='{{"Executes remote shell commands" | translate}}')
 
-  .widget-content.padded
+  //- .widget-content.padded
 
-    // NOTE: autofill doesn't work here
-    form(method='post', enable-autofill, ng-submit='run(command)')
-      .input-group.form-inline
-        input(type=text, ng-model='command', Xtext-focus-select,
-          autocapitalize='off', spellcheck='false',
-          tabindex='30', accesskey='S', autocomplete='on').form-control.shell-input
-        span.input-group-btn
-          button.btn.btn-primary-outline(ng-click='run(command)', ng-disabled='!command')
-            i.fa.fa-play
-    pre.shell-results.selectable(ng-show='data') {{data}}
-    pre.shell-results.selectable.shell-results-empty(ng-show='result.settled && !data') No output
+  form(enable-autofill, ng-submit='openDeepLink(textURL)')
+    .input-group.mb-3
+      input.form-control(
+        type="text"
+        name='textURL',
+        placeholder="okko://..."
+        aria-describedby="button-deeplink"
+        autocomplete='on',
+        ng-model='textURL',
+        text-focus-select,
+        autocapitalize='off',
+        spellcheck='false',
+      )
+      button.btn.btn-outline-secondary(
+        ng-click='openDeepLink(textURL)',
+        ng-disabled='!textURL',
+        type="button",
+        id="button-deeplink",
+        data-mdb-ripple-init,
+        data-mdb-ripple-color="light",
+      ) Перейти
+
+  //- form(enable-autofill, ng-submit='openDeepLink(textURL)')
+  //-   .input-group.url-input-container
+  //-     input.form-control(type='text', name='textURL', placeholder='okko://...',
+  //-     autocomplete='on', ng-model='textURL', text-focus-select,
+  //-     autocapitalize='off', spellcheck='false',
+  //-     accesskey='N', tabindex='10',
+  //-     focus-element='nav.focusUrl')
+  //-     img(ng-src='{{urlFavicon}}')
+
+  //-     .input-group-btn
+  //-       button(ng-click='openDeepLink(textURL)', ng-disabled='!textURL', translate).btn.btn-primary-outline Open
+
+  div.alert.alert-info.mt-5(ng-show='data')
+    div.d-flex.justify-content-between.align-items-start
+      div
+        strong Ответ от устройства
+        div.mt-2.text-break.small.text-secondary.selectable-text(ng-show='data') {{data}}
+        div.mt-2.text-break.small.text-secondary.selectable-text(ng-show='result.settled && !data') Получили пустой ответ от устройства ;(
+      button.btn-close( ng-click='clear()', data-tippy-content="Закрыть окошко ответа от устройства")
+
+
+      //- h6.mb-2(ng-show='data') Ответ от устройства
+        span.material-symbols-outlined(style="font-size: 8px; margin-left: 0.75em; scale: 1.5", ng-click='clear()', data-tippy-content="Закрыть окошко ответа от устройства") close
+    //- textarea.shell-results.form-control(ng-show='data', rows=4, readonly) {{data}}
+    //- textarea.shell-results.form-control.shell-results-empty(rows=4, ng-show='result.settled && !data', readonly) Получили пустой ответ от устройства.
+  //- pre.shell-results.selectable(ng-show='data') {{data}}
+  //- pre.shell-results.selectable.shell-results-empty(ng-show='result.settled && !data') Получили пустой ответ от устройства.
