@@ -18,19 +18,19 @@
 
       //- i.fa.fa-2x.fa-download.drop-area-icon
       span.material-symbols-outlined(style="font-size: 32px;") download
-      .drop-area-text Установить приложение
-        p.small.text-muted Нажми для выбора файла или перетащи его сюда
+      .drop-area-text(style="color: #FFF") Установить приложение
+        p.small.mt-2(style="color: #CCC") Нажми для выбора файла или перетащи его сюда
 
-    div.text-center(ng-if='!installation', style="margin-top: 10px; margin-bottom: 10px;")
+    div.text-center(ng-if='!installation', style="margin-top: 5px; margin-bottom: 10px;")
       button.btn.btn-outline-secondary(ng-click='uninstallOkko()', data-tippy-content="Удалить предыдущее приложение, если оно установлено") Удалить старое
       button.btn.btn-outline-secondary(style="margin-left: .75em !important;", ng-click='forceInstalledStatus()', data-tippy-content="Если на девайсе уже стоит ваша версия") Управлять приложением
 
-    .upload-status(ng-if='installation', style="margin-top: 0").selectable
+    .upload-status(ng-if='installation && !installation.error', style="margin-top: 0").selectable
 
       div.progress(style="margin-top: 10px; margin-bottom: 10px; height: 20px; background-color: #202020;", ng-if='installation.state != "installed"')
         div.progress-bar(role=progressbar, style="background-color: #582ef0; width: {{installation.progress}}%;" aria-valuenow="installation.progress" aria-valuemin="0" aria-valuemax="100", ng-if='!installation.settled') {{installation.progress}}%
 
-      div.text-center(ng-if='installation.state === "installed"', style="margin-top: 10px; margin-bottom: 10px;")
+      div.text-center(ng-if='installation.state === "installed"', style="margin-top: 5px; margin-bottom: 10px;")
         button.btn.btn-outline-secondary(ng-click='launchOkko()') Запустить
         button.btn.btn-outline-secondary(ng-click='resetAndLaunchOkko()', style="margin-left: .75em !important;") Очистить данные
         button.btn.btn-outline-secondary(ng-click='uninstallOkko()', style="margin-left: .75em !important;") Удалить
@@ -42,13 +42,14 @@
           span(ng-switch-when='pushing_app') Отправляем на девайс
           span(ng-switch-when='installing_app') Устанавливаем приложение
           span(ng-switch-when='launching_app') Запускаем приложение
-          span(ng-switch-when='installed')
+          span(ng-switch-when='installed') Готово – управляй приложением кнопками выше
 
-      div.alert.alert-danger.text-center(ng-if='installation.error')
-        span.material-symbols-outlined(style="font-size: 32px;") error
-        p(style="font-size: 14px;") Не получилось поставить приложение
-        p Убедись, что приложение уже не стоит на устройстве
-        p(style="font-size: 10px;") Код ошибки: {{ installation.error }}
+    div.alert.alert-danger.text-center(ng-if='installation.error', style="margin-bottom: 0")
+      span.material-symbols-outlined(style="font-size: 32px;") error
+      p(style="font-size: 14px;") Не получилось поставить приложение
+      //- p {{ installation.error }}
+      p(ng-if="installation.error === 'INSTALL_EXCEPTION'") Попробуйте удалить приложение с девайса вручную
+      p(ng-if="installation.error !== 'INSTALL_EXCEPTION'") {{ installation.error }}
 
       //- alert(type='danger', close='clear()', ng-if='installation.error')
       //-   strong Oops!

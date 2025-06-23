@@ -112,9 +112,9 @@ module.exports = angular.module('stf.device-status', [])
     return function(text) {
       switch (text) {
         case true:
-          return gettext('Yes')
+          return gettext('Да')
         case false:
-          return gettext('No')
+          return gettext('Нет')
         default:
           return gettext('-')
       }

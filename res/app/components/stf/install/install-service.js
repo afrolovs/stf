@@ -4,10 +4,10 @@ Promise.longStackTraces()
 
 module.exports = function InstallService(
   $rootScope
-, $http
-, $filter
-, StorageService
-, AppState
+  , $http
+  , $filter
+  , StorageService
+  , AppState
 ) {
   var installService = Object.create(null)
 
@@ -25,27 +25,27 @@ module.exports = function InstallService(
   Installation.prototype = Object.create(EventEmitter.prototype)
   Installation.prototype.constructor = Installation
 
-  Installation.prototype.apply = function($scope) {
+  Installation.prototype.apply = function ($scope) {
     function changeListener() {
       $scope.safeApply()
     }
 
     this.on('change', changeListener)
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
       this.removeListener('change', changeListener)
     }.bind(this))
 
     return this
   }
 
-  Installation.prototype.update = function(progress, state) {
+  Installation.prototype.update = function (progress, state) {
     this.progress = Math.floor(progress)
     this.state = state
     this.emit('change')
   }
 
-  Installation.prototype.okay = function(state) {
+  Installation.prototype.okay = function (state) {
     this.settled = true
     this.progress = 100
     this.success = true
@@ -53,7 +53,7 @@ module.exports = function InstallService(
     this.emit('change')
   }
 
-  Installation.prototype.fail = function(err) {
+  Installation.prototype.fail = function (err) {
     this.settled = true
     this.progress = 100
     this.success = false
@@ -61,87 +61,121 @@ module.exports = function InstallService(
     this.emit('change')
   }
 
-  installService.installUrl = function(control, url) {
+  function validatePackageName(manifest) {
+    if (!manifest || !manifest.package) {
+      throw new Error('Не удалось определить имя пакета - ты точно ставишь приложение Okko?')
+    }
+
+    if (!manifest.package.includes('ru.more.play')) {
+      throw new Error('Устанавливаемое приложение – не пакет Okko. Поддерживается установка только нашего приложения')
+    }
+
+    return true
+  }
+
+  installService.installUrl = function (control, url) {
     var installation = new Installation('downloading')
     $rootScope.$broadcast('installation', installation)
+
     return control.uploadUrl(url)
-      .progressed(function(uploadResult) {
+      .progressed(function (uploadResult) {
         installation.update(uploadResult.progress / 2, uploadResult.lastData)
       })
-      .then(function(uploadResult) {
+      .then(function (uploadResult) {
         installation.update(uploadResult.progress / 2, uploadResult.lastData)
         installation.manifest = uploadResult.body
+
+        try {
+          validatePackageName(installation.manifest)
+        } catch (err) {
+          installation.fail(err.message)
+          return Promise.reject(err)
+        }
+
         return control.install({
-            href: installation.href,
-            manifest: installation.manifest,
-            launch: installation.launch
-          })
-          .progressed(function(result) {
+          href: installation.href,
+          manifest: installation.manifest,
+          launch: installation.launch
+        })
+          .progressed(function (result) {
             installation.update(50 + result.progress / 2, result.lastData)
           })
       })
-      .then(function() {
+      .then(function () {
         installation.okay('installed')
       })
-      .catch(function(err) {
-        installation.fail(err.code || err.message)
+      .catch(function (err) {
+        if (!installation.settled) {
+          installation.fail(err.code || err.message)
+        }
       })
   }
 
-  installService.installFile = function(control, $files) {
+  installService.installFile = function (control, $files) {
     var installation = new Installation('uploading')
     let isIOSPlatform = AppState.device.platform === 'iOS'
     $rootScope.$broadcast('installation', installation)
+
     return StorageService.storeFile('apk', $files, {
-        filter: function(file) {
-          return isIOSPlatform ? /\.(ipa)$/i.test(file.name) : /\.(apk|aab)$/i.test(file.name)
-        }
+      filter: function (file) {
+        return isIOSPlatform ? /\.(ipa)$/i.test(file.name) : /\.(apk|aab)$/i.test(file.name)
+      }
     })
-      .progressed(function(e) {
+      .progressed(function (e) {
         if (e.lengthComputable) {
           installation.update(e.loaded / e.total * 100 / 2, 'uploading')
         }
       })
-      .then(function(res) {
+      .then(function (res) {
         installation.update(100 / 2, 'processing')
         installation.href = res.data.resources.file.href
-        if(isIOSPlatform) {
-          installation.manifest = {'application': {'activities': {}}}
+
+        if (isIOSPlatform) {
+          installation.manifest = { 'application': { 'activities': {} } }
           return control.install({
             href: installation.href,
             manifest: installation.manifest,
             launch: installation.launch
           })
-            .progressed(function(result) {
+            .progressed(function (result) {
               installation.update(50 + result.progress / 2, result.lastData)
             })
         } else {
           return $http.get(installation.href + '/manifest')
-            .then(function(res) {
+            .then(function (res) {
               if (res.data.success) {
                 installation.manifest = res.data.manifest
+
+                try {
+                  validatePackageName(installation.manifest)
+                } catch (err) {
+                  installation.fail(err.message)
+                  return Promise.reject(err)
+                }
+
                 return control.install({
                   href: installation.href,
                   manifest: installation.manifest,
                   launch: installation.launch
                 })
-                  .progressed(function(result) {
+                  .progressed(function (result) {
                     installation.update(50 + result.progress / 2, result.lastData)
                   })
-              }
-              else {
-                throw new Error('Unable to retrieve manifest')
+              } else {
+                throw new Error('Невозможно прочитать manifest приложения. Ты точно ставишь приложение Okko?')
               }
             })
         }
       })
-      .then(function() {
+      .then(function () {
         installation.okay('installed')
       })
-      .catch(function(err) {
-        installation.fail(err.code || err.message)
+      .catch(function (err) {
+        if (!installation.settled) {
+          installation.fail(err.code || err.message)
+        }
       })
-    }
+  }
 
   return installService
 }

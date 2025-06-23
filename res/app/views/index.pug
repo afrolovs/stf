@@ -18,21 +18,19 @@ html(ng-app='app', data-mdb-theme="dark")
     meta(name='format-detection', content='telephone=no')
     meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
     link(href='static/logo/exports/favicon.ico', rel='apple-touch-icon')
+    // Montserrat font
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet")
+    // Material Icons
+    link(href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@48,300,-25" rel="stylesheet")
+    // MDBootstrap
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet")
 
-    //- title() Device Ranch – Android Mobile
   body(ng-cloak).bg-1.fill-height.unselectable
     div(ng-controller='LayoutCtrl', basic-mode, admin-mode, standalone, landscape).fill-height
-      //- .pane-top.fill-height(fa-pane)
-        //- .pane-top-bar(fa-pane, pane-id='menu', pane-anchor='north',
-        //-   pane-size='{{!$root.basicMode && !$root.standalone ? 44 : 0 }}px',
-
-        //-   pane-handle='')
-        //-   div(ng-include='"menu.pug"')
-
       .pane-center(fa-pane, pane-id='main', pane-anchor='center').fill-height
-        //- socket-state
-        //- div(growl)
         div(ng-view).fill-height
+
+    .overlay.visible
 
     script(src='/app/api/v1/state.js')
     script(src='static/app/build/entry/app.entry.js')
@@ -70,6 +68,10 @@ html(ng-app='app', data-mdb-theme="dark")
       }
       waitForElement('deviceWrapper').then(element => {
 
+          // overlay
+          const overlay = document.querySelector('.overlay');
+          if (overlay) overlay.classList.remove('visible');
+
           // tippy
 
           const singleton = tippy.createSingleton(tippy('[data-tippy-content]'), {
@@ -85,6 +87,16 @@ html(ng-app='app', data-mdb-theme="dark")
                   positionFixed: true,
               }
           });
+          if (window.location.href.includes("/watch/")) {
+          htmlHelp = `
+              <div style='margin: 1em;'>
+                  <div style='margin-bottom: 1em;font-size: 14px'><b>Привет!</b></div>
+                  <li>Тебе скинули эту ссылку, чтобы ты тоже мог смотреть на экран девайса :)
+                  <li>Ещё ты можешь включить показ Logcat, чтобы синхронно смотреть логи с коллегой</li>
+                  <li>Эту подсказку можно закрыть, нажав в любое место экрана</li>
+              </div>
+          `;
+          } else {
           htmlHelp = `
               <div style='margin: 1em;'>
                   <div style='margin-bottom: 1em;font-size: 14px'><b>Что у нас тут есть?</b></div>
@@ -95,6 +107,7 @@ html(ng-app='app', data-mdb-theme="dark")
                   <li>Эту подсказку можно закрыть, нажав в любое место экрана</li>
               </div>
           `;
+          }
           help_modal = document.querySelector('.menu-center-left');
           help_modal.setAttribute('data-tippy-content', htmlHelp);
           singleton.show(help_modal);

@@ -1,45 +1,19 @@
-.widget-container.fluid-height(ng-controller='ScreenshotsCtrl').stf-screenshots
-  .heading
-    button.btn.btn-sm.btn-primary-outline(ng-click='takeScreenShot()',
-    title='{{"Take Screenshot"|translate}}')
-      i.fa.fa-camera
-      span(translate) Screenshot
-    //button.btn.btn-sm.btn-info-outline(ng-click='takePageShot()',
-      title='{{"Take Pageshot (Needs WebView running)"|translate}}',
-      ng-if='$root.platform == "web" && $root.browser == "webview"')
-      i.fa.fa-camera-retro(translate)
-      span(translate) Pageshot
+div(ng-controller='ScreenshotsCtrl')
+  button.btn.btn-outline-secondary(ng-click='takeScreenShot()', style="margin: 1em 1em 0 0 !important;")
+    span.material-symbols-outlined(style="font-size: 7px; scale: 2") screenshot_monitor
+    span.ms-3 Сделать скриншот
+  button.btn.btn-outline-secondary(ng-click='clear()', style="margin: 1em 1em 0 0 !important;")
+    span.material-symbols-outlined(style="font-size: 7px; scale: 2") delete
+    span.ms-3 Удалить скриншоты
 
-    .button-spacer
-
-    clear-button(ng-click='clear()', ng-disabled='!screenshots.length')
-
-    .button-spacer
-
-    .pull-right
-      button.btn.btn-primary-outline.btn-sm.transparent-border(
-        ng-click='zoom({min: 80, step: -50})',
-        ng-disabled='!screenshots.length')
-        i.fa.fa-minus
-
-      input(type='range', ng-model='screenShotSize', min='80', max='480', step='10',
-      ng-model-options='{ updateOn: "default blur", debounce: { default: 100, blur: 0} }',
-      ng-disabled='!screenshots.length').zoom-range
-
-      button.btn.btn-primary-outline.btn-sm.transparent-border(
-        ng-click='zoom({max: 480, step: 50})',
-        ng-disabled='!screenshots.length')
-        i.fa.fa-plus
-
-  .widget-content.padded
-    nothing-to-show(message='{{"No screenshots taken"|translate}}', icon='fa-camera', ng-show='!screenshots.length')
-
-    ul.screenshots-icon-view.clear-fix.selectable
-      li.screenshots-icon-item(ng-repeat='shot in screenshots').cursor-select
-        h5 {{ device.name }}
-        h6 {{ shot.body.date | date:'HH:mm:ss' }}
-        a(ng-href='{{ shot.body.href }}', target='_blank')
-          img(ng-src='{{ shot.body.href + shotSizeParameter(480, 1) }}',
-          ng-srcset='{{ shot.body.href + shotSizeParameter(480, 2) }} 2x').screenshot-image
-
-    .clearfix
+  h6.mt-5(ng-show='!screenshots.length') Скриншотов пока нет. Самое время их сделать!
+  .screenshots-grid.mt-4(style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 400px; margin: 0 auto;")
+    li.screenshot-item(ng-repeat='shot in screenshots' style="list-style: none;")
+      a(ng-href='{{shot.body.href}}' target='_blank' style="display: block; height: 0; padding-bottom: 56.25%; position: relative; overflow: hidden; border-radius: 5px; border: solid 1px #333;")
+        img(
+          ng-src='{{shot.body.href + shotSizeParameter(133, 1)}}'
+          ng-srcset='{{shot.body.href + shotSizeParameter(266, 1)}} 2x'
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+          title=`Скриншот от {{ shot.body.date | date:'HH:mm:ss' }}`
+          loading="lazy"
+        )

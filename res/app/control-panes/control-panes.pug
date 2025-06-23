@@ -389,14 +389,14 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
         }
 
         .bg-dark {
-            background-color: #111 !important;
+            background-color: #111 !important;d
         }
 
         .gradient {
             position: absolute;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, #2B06AB 10%, transparent 40%);
+            background: radial-gradient(circle, #x 10%, transparent 40%);
             opacity: 0;
             z-index: -1;
         }
@@ -463,14 +463,14 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       .form-control {
         color: rgba(255,255,255, 0.8);
-        background-color: #303030;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background-color: #582ef020;
+        border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 0.25rem;
       }
 
       .form-control:focus {
         color: white;
-        background-color: #303030;
+        background-color: #582ef020;
       }
 
       .btn {
@@ -490,7 +490,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       .btn-outline-secondary, .btn-outline-secondary:disabled, .btn-outline-secondary:hover {
         color: white;
-        border-color: rgba(255, 255, 255, 0.12);
+        border-color: 1px solid rgba(255, 255, 255, 0.19)
       }
 
       .input-group > .form-control:focus {
@@ -498,15 +498,18 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
       }
 
       .form-control[readonly] {
-        background-color: rgba(255, 255, 255, 0.12) !important;
+        background-color: black !important;
       }
 
+      #adb-port {
+        box-shadow: none;
+      }
       textarea {
         resize: none;
       }
 
       .widget-container {
-        background-color: #303030;
+        background-color: #582ef020;
       }
 
       .alert {
@@ -515,8 +518,8 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
       }
 
       .alert-info {
-        background-color:rgba(78, 41, 213, 0.53);
-        color: rgb(216.6, 219.4, 224.2);
+        background-color: #582ef060;
+        color: #DDD;
       }
 
       strong {
@@ -551,22 +554,97 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
         border-bottom-width: 0;
       }
 
+      /* Фикс рендера кнопок для Chrome */
+      @media screen and (-webkit-min-device-pixel-ratio:0) {
+        .btn, .form-control {
+          transform: translateZ(0); /* Активирует GPU рендеринг */
+          zoom: 1; /* Фикс для некоторых версий Chrome */
+        }
+      }
+
+      /* Фикс рендера кнопок для Safari */
+      _::-webkit-full-page-media, _:future, :root .safari-only {
+        font-size: 9px;
+        line-height: 1.2;
+      }
+
+      /* Normalize для кнопок и инпутов */
+      button, input, textarea, select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        font-size: 9px;
+        font-family: inherit;
+        line-height: normal;
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        background-image: none;
+      }
+
+      /* Принудительный рендеринг */
+      * {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-size-adjust: 100%;
+      }
+
+      /* Для всех интерактивных элементов */
+      .btn, .input-group-text {
+        font-size: 9px !important;
+        line-height: 24px !important;
+        padding: 0 8px !important;
+        min-width: 60px;
+      }
+
+      /* Специфичные стили для input/textarea */
+      .form-control,
+      input[type="text"],
+      input[type="password"],
+      textarea {
+        font-size: 12px !important;
+        height: 24px;
+        padding: 4px 8px !important;
+        line-height: 16px !important;
+      }
+
+      .watch {
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+
+      .device-table {
+        border: none;
+        padding: 4px;
+        color: rgba(255,255,255,.65);
+      }
+
+      .device-table th {
+        font-size: 12px !important;
+        border: none !important;
+        border-top: none !important;
+        cursor: pointer;
+      }
+
   body
     // Логотип и описание
     .logo-container
       .logo
         img(src="static/logo/exports/logo.svg" alt="Okko")
       a(href="#")
-        .logo-heading Управление устройством
+        .logo-heading(ng-if="!isWatchMode") Управление устройством
+        .logo-heading(ng-if="isWatchMode") Наблюдение за устройством
 
     // Основной контент
     .main-content#mainContent
       // Контейнер устройства
       .device-wrapper#deviceWrapper
         .device-container
-          //- .device-screen#deviceScreen
-          .screen-content
-            //- .remote-control
+          .screen-content(ng-class="{'watch': isWatchMode}")
             div(ng-include='"control-panes/device-control/device-control.pug"').fill-height
 
       // Боковое меню
@@ -575,7 +653,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
           span.material-symbols-outlined menu
           span.side-menu-toggle-title Свернуть панель
 
-        .side-menu-section(data-panel="app-panel")
+        .side-menu-section(data-panel="app-panel", ng-if="!isWatchMode")
           span.material-symbols-outlined apps
           span.side-menu-section-title Работа с приложением
 
@@ -583,11 +661,19 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
           span.material-symbols-outlined developer_mode
           span.side-menu-section-title Логи и отладка
 
-        .side-menu-section(data-panel="other-buttons")
+        .side-menu-section(data-panel="other-buttons", ng-if="!isWatchMode")
           span.material-symbols-outlined remote_gen
           span.side-menu-section-title Спефицичные кнопки
 
-        .side-menu-section(data-panel="stats-panel")
+        .side-menu-section(data-panel="screenshots", ng-if="!isWatchMode")
+          span.material-symbols-outlined screenshot_monitor
+          span.side-menu-section-title Скриншоты
+
+        .side-menu-section(data-panel="device-info")
+          span.material-symbols-outlined info
+          span.side-menu-section-title Информация о девайсе
+
+        .side-menu-section(data-panel="misc-panel", ng-if="!isWatchMode")
           span.material-symbols-outlined settings_applications
           span.side-menu-section-title Дополнительно
 
@@ -595,23 +681,63 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
       .side-panel-content.bg-glass#app-panel
         h4.mb-5 Работа с приложением
         h5.mb-3.d-flex.align-items-center Установка приложения
-          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Установить APK-файл нашего приложения с компьютера.<p>Можно установить только приложение Okko :)") help
+          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Установить APK-файл нашего приложения с компьютера.<div>Можно установить только приложение Okko :)") help
         div(ng-include='"control-panes/dashboard/install/install.pug"')
 
         h5.mb-3.mt-5.d-flex.align-items-center Deeplinks
-          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Диплинки - это ссылки, которые должны открывать нужный контент в нашем приложении.<p>Обычно начинаются с <tt>okko://</tt>") help
+          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Диплинки - это ссылки, которые должны открывать нужный контент в нашем приложении.<div>Обычно начинаются с <tt>okko://</tt>") help
         div(ng-include='"control-panes/dashboard/shell/shell.pug"')
 
       // Боковая панель - Логи и отладка
       .side-panel-content.bg-glass#app-logs
         h4.mb-5 Логи и отладка
-        h5.mb-3.d-flex.align-items-center ADB port reverse
-          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Подключиться к устройству, будто он напрямую подключен к твоему ноутбуку.<p>Как использовать – читать в FAQ в левом нижнем углу экрана") help
-        div(ng-include='"control-panes/advanced/remote-debug/remote-debug.pug"')
+
+        div(ng-if="!isWatchMode")
+          h5.mb-3.d-flex.align-items-center ADB port reverse
+            span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Подключиться к устройству, будто он напрямую подключен к твоему ноутбуку.<div>Как использовать – читать в FAQ в левом нижнем углу экрана") help
+          div(ng-include='"control-panes/advanced/remote-debug/remote-debug.pug"')
+
+        div.alert.alert-info.mt-5(ng-if="isWatchMode")
+          div.d-flex
+            span.material-symbols-outlined.me-2.fs-1.text-muted warning
+            div.small.text-secondary Включать и отключать поток логов может только <b>текущий владелец устройства</b>.<br>Но тебе доступна отдельная фильтрация по критичности и подстроке :)
+
 
         h5.mb-3.d-flex.align-items-center Logcat приложения
-          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Логи устройства в реальном времени.<p>Не забудь использовать фильтр, например <tt>ru.more.play</tt>") help
+          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Логи устройства в реальном времени.<div>Не забудь использовать фильтр, например <tt>ru.more.play</tt>") help
         div(ng-include='"control-panes/logs/logs.pug"')
+
+      // Боковая панель - Специфичные кнопки
+      .side-panel-content.bg-glass#other-buttons
+        h4.mb-5 Специфичные кнопки
+        div(ng-include='"control-panes/advanced/input/input.pug"')
+
+      // Боковая панель - Скриншоты
+      .side-panel-content.bg-glass#screenshots
+        h4.mb-5 Скриншоты
+        div(ng-include='"control-panes/screenshots/screenshots.pug"')
+
+      // Боковая панель - Информация о девайсе
+      .side-panel-content.bg-glass#device-info
+        h4.mb-5 Информация о девайсе
+        div(ng-include='"control-panes/info/info.pug"')
+
+      // Боковая панель - Дополнительно
+      .side-panel-content.bg-glass#misc-panel
+        h4.mb-5 Дополнительно
+        h5.mb-3.d-flex.align-items-center Полезное
+
+        button.btn.btn-outline-secondary(ng-click='control.identify()', style="margin: 1em 1em 0 0 !important;", data-tippy-content="На девайсе экран загорится ярко-красным цветом, а на него выведется служебная информация. Так найти устройство гораздо проще :)")
+          span.material-symbols-outlined(style="font-size: 7px; scale: 2") search
+          span.ms-3 Найти девайс в лабе
+
+        h5.mt-5.mb-3.d-flex.align-items-center Поделиться стримом
+          span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Отправь ссылку коллеге, чтобы синхронно отлаживать приложение!<div>Он также сможет смотреть логи в реальном времени – но не сможет управлять вашим девайсом") help
+        a.d-none(ng-href="/#!/watch/{{device.serial}}")
+        textarea.form-control(ng-model="watchUrl", style="border: none; min-height: inherit; width: 350px; padding: 0 !important; height: 20px;background-color: black !important", readonly)
+        button.btn.btn-outline-secondary(ng-click='copyToClipboard()', style="margin: 1em 1em 0 0 !important;")
+          span.material-symbols-outlined(style="font-size: 7px; scale: 2") content_copy
+          span.ms-3 Скопировать ссылку
 
     // Нижнее меню
     .bottom-menu.bg-glass
@@ -622,18 +748,19 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       // Центральная группа иконок
       .menu-center-group
-        .menu-item
-          span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('portrait')", data-tippy-content="Портретный режим") mobile_lock_portrait
-        .menu-item
-          span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('landscape')", data-tippy-content="Ландшафтный режим") mobile_lock_landscape
-        .menu-divider
-        .menu-item
-          span.material-symbols-outlined(device-control-key='back', data-tippy-content="Назад") chevron_left
-        .menu-item
-          span.material-symbols-outlined(device-control-key='home', data-tippy-content="На главную") home
-        .menu-item
-          span.material-symbols-outlined(device-control-key='app_switch', data-tippy-content="Меню") menu
-        .menu-divider
+        if !isWatchMode
+          .menu-item
+            span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('portrait')", data-tippy-content="Портретный режим") mobile_lock_portrait
+          .menu-item
+            span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('landscape')", data-tippy-content="Ландшафтный режим") mobile_lock_landscape
+          .menu-divider
+          .menu-item
+            span.material-symbols-outlined(device-control-key='back', data-tippy-content="Назад") chevron_left
+          .menu-item
+            span.material-symbols-outlined(device-control-key='home', data-tippy-content="На главную") home
+          .menu-item
+            span.material-symbols-outlined(device-control-key='app_switch', data-tippy-content="Меню") menu
+          .menu-divider
         .menu-item
           span.material-symbols-outlined(ng-click='deviceControls.kickDevice(device, $event)', data-tippy-content="Отключиться") power_settings_new
 

@@ -1,64 +1,52 @@
-.widget-container.fluid-height(ng-controller='InputAdvancedCtrl')
-  .heading
-    stacked-icon(icon='fa-gear', color='color-pink')
-    span(translate) Advanced Input
-  .widget-content.padded
-    div
-      h6(translate) Special Keys
-      div.special-keys-buttons
-        button(uib-tooltip='{{ "Power" | translate }}', ng-click='press("power")').btn.btn-danger.btn-xs
-          i.fa.fa-power-off
-        button(uib-tooltip='{{ "Camera" | translate }}', ng-click='press("camera")').btn.btn-primary.btn-xs
-          i.fa.fa-camera
-        button(uib-tooltip='{{ "Switch Charset" | translate }}', ng-click='press("switch_charset")').btn.btn-primary.btn-info.btn-xs
-          i.fa  Aa
-        button(uib-tooltip='{{ "Search" | translate }}', ng-click='press("search")').btn.btn-primary.btn-xs
-          i.fa.fa-search
+div(ng-controller='InputAdvancedCtrl')
 
-        h6(translate) Volume
-        .btn-group
-          button(uib-tooltip='{{ "Mute" | translate }}', ng-click='press("mute")').btn.btn-primary.btn-xs
-            i.fa.fa-volume-off
-          button(uib-tooltip='{{ "Volume Down" | translate }}', ng-click='press("volume_down")').btn.btn-primary.btn-xs
-            i.fa.fa-volume-down
-          button(uib-tooltip='{{ "Volume Up" | translate }}', ng-click='press("volume_up")').btn.btn-primary.btn-xs
-            i.fa.fa-volume-up
+  mixin mediaButton(action, icon, tooltip, width)
+    button.btn.btn-outline-secondary(
+      style=`margin: 1em 1em 0 0 !important; min-width: ${width}px;`,
+      ng-click=`press("${action}")`,
+      data-tippy-content=tooltip
+    )
+      span.material-symbols-outlined(style="font-size: 7px; scale: 3")= icon
 
-        h6(translate) Media
-        .btn-group
-          button(uib-tooltip='{{ "Rewind" | translate }}', ng-click='press("media_rewind")').btn.btn-primary.btn-xs
-            i.fa.fa-fast-backward
-          button(uib-tooltip='{{ "Previous" | translate }}', ng-click='press("media_previous")').btn.btn-primary.btn-xs
-            i.fa.fa-step-backward
-          button(uib-tooltip='{{ "Play/Pause" | translate }}', ng-click='press("media_play_pause")').btn.btn-primary.btn-xs
-            i.fa.fa-youtube-play
-          button(uib-tooltip='{{ "Stop" | translate }}', ng-click='press("media_stop")').btn.btn-primary.btn-xs
-            i.fa.fa-stop
-          button(uib-tooltip='{{ "Next" | translate }}', ng-click='press("media_next")').btn.btn-primary.btn-xs
-            i.fa.fa-step-forward
-          button(uib-tooltip='{{ "Fast Forward" | translate }}', ng-click='press("media_fast_forward")').btn.btn-primary.btn-xs
-            i.fa.fa-fast-forward
-    //h6 D-pad
-    //table.special-keys-dpad-buttons
-      tr
-        td
-        td
-          button(uib-tooltip='{{ "D-pad Up" | translate }}', ng-click='press("dpad_up")').btn.btn-info.btn-xs
-            i.fa.fa-chevron-up
-        td
-      tr
-        td
-          button(uib-tooltip='{{ "D-pad Left" | translate }}', ng-click='press("dpad_left")').btn.btn-info.btn-xs
-            i.fa.fa-chevron-left
-        td
-          button(uib-tooltip='{{ "D-pad Center" | translate }}', ng-click='press("dpad_center")').btn.btn-info.btn-xs
-            i.fa.fa-circle-o
-        td
-          button(uib-tooltip='{{ "D-pad Right" | translate }}', ng-click='press("dpad_right")').btn.btn-info.btn-xs
-            i.fa.fa-chevron-right
-      tr
-        td
-        td
-          button(uib-tooltip='{{ "D-pad Down" | translate }}', ng-click='press("dpad_down")').btn.btn-info.btn-xs
-            i.fa.fa-chevron-down
-        td
+  h5.mb-3.d-flex.align-items-center Громкость и звук
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Регулировка громкости на устройстве.<div>Mute иногда может не работать на конкретном девайсе – тогда пользуйся кнопкой уменьшения громкости") help
+
+  div.alert.alert-info.mt-4
+    div.d-flex
+      span.material-symbols-outlined.me-2.fs-1.text-muted warning
+      div.small.text-secondary <b>Не включай звук</b> на девайсе без необходимости!<br>В офисе работают твои коллеги, побереги их уши
+
+  - let btnWidth = 109
+  +mediaButton("mute", "no_sound", "Mute: выключить звук", btnWidth)
+  +mediaButton("volume_down", "volume_down", "Уменьшить громкость", btnWidth)
+  +mediaButton("volume_up", "volume_up", "Увеличить громкость", btnWidth)
+
+  h5.mt-5.mb-3.d-flex.align-items-center Мультимедиа
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content='<p>Эмуляция кнопок "богатых" пультов с кнопками перемотки, паузы, и прочими штуками') help
+
+  - btnWidth = 50
+  +mediaButton("media_previous", "skip_previous", "Предыдущий трек", btnWidth)
+  +mediaButton("media_rewind", "fast_rewind", "Перемотка назад", btnWidth)
+  +mediaButton("media_play_pause", "play_pause", "Играть / Пауза", btnWidth)
+  +mediaButton("media_stop", "stop", "Остановить плейбек", btnWidth)
+  +mediaButton("media_fast_forward", "fast_forward", "Перемотка вперёд", btnWidth)
+  +mediaButton("media_next", "skip_next", "Следующий трек", btnWidth)
+
+  h5.mt-5.mb-3.d-flex.align-items-center ТВ-пульт
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content='<p><b>Подсказка</b>: Гораздо удобнее использовать стрелки на клавиатуре!<div>Просто нажми мышкой на экран, и всё заработает') help
+
+  - btnWidth = 62
+    +mediaButton("dpad_up", "arrow_upward_alt", "Джойстик: вверх", btnWidth)
+    +mediaButton("dpad_down", "arrow_downward_alt", "Джойстик: вниз", btnWidth)
+    +mediaButton("dpad_center", "target", "Джойстик: ОК", btnWidth)
+    +mediaButton("dpad_left", "arrow_left_alt", "Джойстик: влево", btnWidth)
+    +mediaButton("dpad_right", "arrow_right_alt", "Джойстик: вправо", btnWidth)
+
+  h5.mt-5.mb-3.d-flex.align-items-center Служебное
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content='<p>Системные кнопки, обычно аппаратные. Будьте с ними аккуратнее :)') help
+
+  - btnWidth = 80
+    +mediaButton("power", "mode_off_on", "Кнопка питания (на свой страх и риск!)", btnWidth)
+    +mediaButton("camera", "monochrome_photos", "Запуск камеры", btnWidth)
+    +mediaButton("search", "search", "Кнопка поиска", btnWidth)
+    +mediaButton("switch_charset", "language", "Переключить раскладку", btnWidth)

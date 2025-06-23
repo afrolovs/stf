@@ -3,11 +3,12 @@
 **/
 
 module.exports =
-  function ControlPanesController($scope, $http, gettext, $routeParams,
+  function ControlPanesController($scope, $http, $window, gettext, $routeParams,
     $timeout, $location, DeviceService, GroupService, ControlService,
     StorageService, FatalMessageService, SettingsService, LogcatService) {
 
     $scope.showScreen = true
+    $scope.isWatchMode = $location.path().includes('/watch/');
 
     $scope.groupTracker = DeviceService.trackGroup($scope)
 
@@ -189,4 +190,26 @@ module.exports =
       const isPortrait = newValue === 0 || newValue === 180;
       $scope.deviceControls.currentRotation = isPortrait ? 'portrait' : 'landscape';
     });
+
+    $scope.generateWatchUrl = function () {
+      return $window.location.origin + '/watch/' + $routeParams.serial;
+    };
+
+    $scope.copyToClipboard = async function () {
+      try {
+        await navigator.clipboard.writeText($scope.generateWatchUrl());
+        alert('Ссылка скопирована в буфер обмена!');
+      } catch (err) {
+        // Fallback для старых браузеров
+        const textarea = document.createElement('textarea');
+        textarea.value = $scope.generateWatchUrl();
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('Ссылка скопирована!');
+      }
+    };
+
+    $scope.watchUrl = $scope.generateWatchUrl();
   }

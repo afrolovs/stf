@@ -379,195 +379,195 @@ dl {
   }
 }
 
-.btn {
-  font-weight: 500;
-  margin: 0 5px 5px 0;
-  @include transition(all 100ms);
-  &.active {
-    box-shadow: none;
-  }
-  .caret {
-    margin: -2px 0 0 6px;
-  }
-  [class^="fa"],
-  &[class*="fa"] {
-    display: inline-block;
-    margin-right: 8px;
-  }
-}
+// .btn {
+//   font-weight: 500;
+//   margin: 0 5px 5px 0;
+//   @include transition(all 100ms);
+//   &.active {
+//     box-shadow: none;
+//   }
+//   .caret {
+//     margin: -2px 0 0 6px;
+//   }
+//   [class^="fa"],
+//   &[class*="fa"] {
+//     display: inline-block;
+//     margin-right: 8px;
+//   }
+// }
 
-.btn {
-  &.disabled,
-  &[disabled] {
-    font-weight: 300;
-  }
-}
+// .btn {
+//   &.disabled,
+//   &[disabled] {
+//     font-weight: 300;
+//   }
+// }
 
-@mixin btn-base($primary, $secondary) {
-  background: $primary;
-  border-color: $primary;
-  &:hover, &.active {
-    background: transparent;
-    color: $primary;
-    border-color: $primary;
-    .caret {
-      border-top-color: $secondary;
-    }
-  }
-}
+// @mixin btn-base($primary, $secondary) {
+//   background: $primary;
+//   border-color: $primary;
+//   &:hover, &.active {
+//     background: transparent;
+//     color: $primary;
+//     border-color: $primary;
+//     .caret {
+//       border-top-color: $secondary;
+//     }
+//   }
+// }
 
-.btn-default {
-  background: $muted;
-  border-color: $muted;
-  color: white;
-  .caret {
-    border-top-color: white;
-  }
-  &:hover, &.active {
-    background: transparent;
-    color: #aaaaaa;
-    border-color: $muted;
-    .caret {
-      border-top-color: $muted;
-    }
-  }
-  &.disabled, &[disabled] {
-    @extend .btn-default;
-  }
-}
+// .btn-default {
+//   background: $muted;
+//   border-color: $muted;
+//   color: white;
+//   .caret {
+//     border-top-color: white;
+//   }
+//   &:hover, &.active {
+//     background: transparent;
+//     color: #aaaaaa;
+//     border-color: $muted;
+//     .caret {
+//       border-top-color: $muted;
+//     }
+//   }
+//   &.disabled, &[disabled] {
+//     @extend .btn-default;
+//   }
+// }
 
-.btn-primary {
-  @include btn-base($main, $main);
-}
+// .btn-primary {
+//   @include btn-base($main, $main);
+// }
 
-.btn-success {
-  @include btn-base($success, $muted);
-}
+// .btn-success {
+//   @include btn-base($success, $muted);
+// }
 
-.btn-info {
-  border-color: transparent !important;
-  &:hover, &.active {
-    background: transparent;
-    color: $info;
-    border-color: $info;
-    .caret {
-      border-top-color: $info;
-    }
-  }
-}
+// .btn-info {
+//   border-color: transparent !important;
+//   &:hover, &.active {
+//     background: transparent;
+//     color: $info;
+//     border-color: $info;
+//     .caret {
+//       border-top-color: $info;
+//     }
+//   }
+// }
 
-.btn-warning {
-  &:hover, &.active {
-    background: transparent;
-    color: $warning;
-    border-color: $warning;
-    .caret {
-      border-top-color: $warning;
-    }
-  }
-}
+// .btn-warning {
+//   &:hover, &.active {
+//     background: transparent;
+//     color: $warning;
+//     border-color: $warning;
+//     .caret {
+//       border-top-color: $warning;
+//     }
+//   }
+// }
 
-.btn-danger {
-  &:hover, &.active {
-    background: transparent;
-    color: $danger;
-    border-color: $danger;
-    .caret {
-      border-top-color: $danger;
-    }
-  }
-}
+// .btn-danger {
+//   &:hover, &.active {
+//     background: transparent;
+//     color: $danger;
+//     border-color: $danger;
+//     .caret {
+//       border-top-color: $danger;
+//     }
+//   }
+// }
 
-.btn-default-outline, .btn-primary-outline, .btn-success-outline,
-.btn-info-outline, .btn-warning-outline, .btn-danger-outline {
-  background: transparent;
-}
+// .btn-default-outline, .btn-primary-outline, .btn-success-outline,
+// .btn-info-outline, .btn-warning-outline, .btn-danger-outline {
+//   background: transparent;
+// }
 
-.btn-default-outline {
-  color: #999999;
-  &:hover, &.active {
-    background: $muted;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-default-outline {
+//   color: #999999;
+//   &:hover, &.active {
+//     background: $muted;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-primary-outline {
-  color: $main;
-  &:hover, &.active {
-    background: $main;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-primary-outline {
+//   color: $main;
+//   &:hover, &.active {
+//     background: $main;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-success-outline {
-  color: $success;
-  &:hover, &.active {
-    background: $success;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-success-outline {
+//   color: $success;
+//   &:hover, &.active {
+//     background: $success;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-info-outline {
-  color: $info;
-  &:hover, &.active {
-    background: $info;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-info-outline {
+//   color: $info;
+//   &:hover, &.active {
+//     background: $info;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-warning-outline {
-  color: $warning;
-  &:hover, &.active {
-    background: $warning;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-warning-outline {
+//   color: $warning;
+//   &:hover, &.active {
+//     background: $warning;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-danger-outline {
-  color: $danger;
-  &:hover, &.active {
-    background: $danger;
-    color: white;
-    .caret {
-      border-top-color: white;
-    }
-  }
-}
+// .btn-danger-outline {
+//   color: $danger;
+//   &:hover, &.active {
+//     background: $danger;
+//     color: white;
+//     .caret {
+//       border-top-color: white;
+//     }
+//   }
+// }
 
-.btn-group {
-  margin: 0 5px 5px 0;
-  &.pull-right {
-    margin-right: 0;
-  }
-  > .btn {
-    margin: 0;
-    & + .dropdown-toggle {
-      margin-left: 1px;
-      .caret {
-        margin-left: 0;
-      }
-      &[class^="-outline"], &[class*="-outline"] {
-        margin-left: -1px;
-      }
-    }
-  }
+// .btn-group {
+//   margin: 0 5px 5px 0;
+//   &.pull-right {
+//     margin-right: 0;
+//   }
+//   > .btn {
+//     margin: 0;
+//     & + .dropdown-toggle {
+//       margin-left: 1px;
+//       .caret {
+//         margin-left: 0;
+//       }
+//       &[class^="-outline"], &[class*="-outline"] {
+//         margin-left: -1px;
+//       }
+//     }
+//   }
 
-}
+// }
 
 .dropdown-menu {
   border: 1px solid #dddddd;
@@ -946,17 +946,17 @@ button.close {
   }
 }
 
-.btn.disabled,
-.btn[disabled],
-fieldset[disabled] .btn {
-  color: #a6a6a6;
-}
+// .btn.disabled,
+// .btn[disabled],
+// fieldset[disabled] .btn {
+//   color: #a6a6a6;
+// }
 
-.btn.disabled:hover,
-.btn[disabled]:hover,
-fieldset[disabled] .btn:hover {
-  background: transparent;
-}
+// .btn.disabled:hover,
+// .btn[disabled]:hover,
+// fieldset[disabled] .btn:hover {
+//   background: transparent;
+// }
 
 .checkbox, .radio {
   padding-left: 20px;

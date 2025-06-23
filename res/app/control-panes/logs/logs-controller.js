@@ -1,4 +1,4 @@
-module.exports = function LogsCtrl($scope, $rootScope, $routeParams, LogcatService) {
+module.exports = function LogsCtrl($scope, $rootScope, $routeParams, $location, LogcatService) {
 
   var deviceSerial = $routeParams.serial
   var cleanDevice = (window.location.href).split('/').pop()
@@ -6,6 +6,7 @@ module.exports = function LogsCtrl($scope, $rootScope, $routeParams, LogcatServi
 
   $scope.started = checkLogBtnStatus() === null ? false : checkLogBtnStatus()
   $scope.filters = {}
+  $scope.isWatchMode = $location.path().includes('/watch/');
 
   $scope.filters.levelNumbers = LogcatService.filters.levelNumbers
 
