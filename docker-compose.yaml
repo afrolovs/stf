@@ -13,24 +13,25 @@ services:
     container_name: adb
     image: devicefarmer/adb:latest
     restart: unless-stopped
-    volumes: 
+    volumes:
       - "/dev/bus/usb:/dev/bus/usb"
     privileged: true
 
   stf:
     container_name: stf
-    image: devicefarmer/stf
+    image: 96bb7b7c557c
     ports:
       - "7100:7100"
       - "7110:7110"
       - "7400-7500:7400-7500"
     environment:
-      - TZ='America/Los_Angeles'
+      - TZ='Europe/Moscow'
       - RETHINKDB_PORT_28015_TCP=tcp://rethinkdb:28015
-      - STF_ADMIN_EMAIL=<YOUR_EMAIL>
-      - STF_ADMIN_NAME=<YOUR_NAME>
+      - SCREEN_GRABBER=minicap-bin
+      - DEVICE_FARM_URL=http://192.168.2.35:7100/#!/devices_legacy
+      - FARM_IS_TV_MODE=false
     restart: unless-stopped
-    command: stf local --adb-host adb --public-ip YOUR_IP --provider-min-port 7400 --provider-max-port 7500
+    command: stf local --adb-host adb --public-ip 192.168.2.35 --provider-min-port 7400 --provider-max-port 7500
 
 volumes:
   rethinkdb-data: {}

@@ -3,8 +3,8 @@ services:
     user: root
     build: .
     volumes:
-      - .:/app  # Монтируем текущую директорию поверх /app в контейнере
-      - /app/node_modules  # Сохраняем оригинальные node_modules
+      - .:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - SCREEN_GRABBER=minicap-bin
