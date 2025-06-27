@@ -396,7 +396,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
             position: absolute;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, #x 10%, transparent 40%);
+            background: radial-gradient(circle, #2B06AB 10%, transparent 40%);
             opacity: 0;
             z-index: -1;
         }
@@ -454,6 +454,10 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       .screen {
         background-color: #000000;
+        background-image: url("/static/logo/exports/load.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 300px auto;
         box-shadow: 0px 0px 25px 4px #4806ab53;
         overflow: visible;
         position: relative;
@@ -635,7 +639,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
     .logo-container
       .logo
         img(src="static/logo/exports/logo.svg" alt="Okko")
-      a(href="#")
+      a(href="/#!/devices")
         .logo-heading(ng-if="!isWatchMode") Управление устройством
         .logo-heading(ng-if="isWatchMode") Наблюдение за устройством
 
@@ -694,7 +698,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
         div(ng-if="!isWatchMode")
           h5.mb-3.d-flex.align-items-center ADB port reverse
-            span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Подключиться к устройству, будто он напрямую подключен к твоему ноутбуку.<div>Как использовать – читать в FAQ в левом нижнем углу экрана") help
+            span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Подключиться к устройству, будто оно напрямую подключено к твоему ноутбуку.<div>Как использовать – читать в FAQ в левом нижнем углу экрана") help
           div(ng-include='"control-panes/advanced/remote-debug/remote-debug.pug"')
 
         div.alert.alert-info.mt-5(ng-if="isWatchMode")
@@ -748,19 +752,18 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       // Центральная группа иконок
       .menu-center-group
-        if !isWatchMode
-          .menu-item
-            span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('portrait')", data-tippy-content="Портретный режим") mobile_lock_portrait
-          .menu-item
-            span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('landscape')", data-tippy-content="Ландшафтный режим") mobile_lock_landscape
-          .menu-divider
-          .menu-item
-            span.material-symbols-outlined(device-control-key='back', data-tippy-content="Назад") chevron_left
-          .menu-item
-            span.material-symbols-outlined(device-control-key='home', data-tippy-content="На главную") home
-          .menu-item
-            span.material-symbols-outlined(device-control-key='app_switch', data-tippy-content="Меню") menu
-          .menu-divider
+        .menu-item(ng-if="!isWatchMode")
+          span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('portrait')", data-tippy-content="Портретный режим") mobile_lock_portrait
+        .menu-item(ng-if="!isWatchMode")
+          span.material-symbols-outlined(ng-click="deviceControls.tryToRotate('landscape')", data-tippy-content="Ландшафтный режим") mobile_lock_landscape
+        .menu-divider(ng-if="!isWatchMode")
+        .menu-item(ng-if="!isWatchMode")
+          span.material-symbols-outlined(device-control-key='back', data-tippy-content="Назад") chevron_left
+        .menu-item(ng-if="!isWatchMode")
+          span.material-symbols-outlined(device-control-key='home', data-tippy-content="На главную") home
+        .menu-item(ng-if="!isWatchMode")
+          span.material-symbols-outlined(device-control-key='app_switch', data-tippy-content="Меню") menu
+        .menu-divider(ng-if="!isWatchMode")
         .menu-item
           span.material-symbols-outlined(ng-click='deviceControls.kickDevice(device, $event)', data-tippy-content="Отключиться") power_settings_new
 

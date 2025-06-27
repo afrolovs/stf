@@ -5,33 +5,33 @@ div.table-responsive(ng-controller='InfoCtrl')
     .col.fw-bold {{device.manufacturer}}
   .row.selectable-text
     .col Рыночное имя модели
-    .col {{device.marketName ? device.marketName : device.model}}
+    .col.fw-bold {{device.marketName ? device.marketName : device.model}}
   .row.selectable-text
     .col Код модели
-    .col {{device.model}}
+    .col.fw-bold {{device.model}}
   .row.selectable-text
     .col Серийный номер
-    .col {{device.serial}}
+    .col.fw-bold {{device.serial}}
   h5.mt-4.mb-3.d-flex.align-items-center Дисплей
   .row.selectable-text
     .col Размеры
-    .col {{device.display.height}} x {{device.display.width}} px
-  .row.selectable-text
-    .col Плотность пикселей
-    .col {{device.display.density | displayDensity}} ppi
+    .col.fw-bold {{device.display.height}} x {{device.display.width}} px
   .row.selectable-text
     .col Частота обновления
-    .col {{device.display.fps}} Гц
+    .col.fw-bold {{device.display.fps}} Гц
   .row.selectable-text
     .col Плотность пикселей
-    .col {{device.display.xdpi}} dpi
+    .col.fw-bold {{device.display.xdpi}} dpi
   h5.mt-4.mb-3.d-flex.align-items-center Операционная система
   .row.selectable-text
     .col Версия Android
-    .col {{device.version}} (SDK: {{device.sdk}})
+    .col.fw-bold {{device.version}} (SDK: {{device.sdk}})
   .row.selectable-text
     .col Архитектура
-    .col {{device.abi}}
+    .col.fw-bold {{device.abi}}
+  .row.selectable-text
+    .col Семейство CPU
+    .col.fw-bold {{device.cpuPlatform}}
 
   h5.mt-4.mb-3.d-flex.align-items-center Мобильная связь
   div(ng-if="!device.phone.network") SIM-карта не установлена

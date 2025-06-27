@@ -24,6 +24,26 @@ html(ng-app='app', data-mdb-theme="dark")
     link(href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@48,300,-25" rel="stylesheet")
     // MDBootstrap
     link(href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet")
+    style.
+      .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(0);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 1s ease-in-out, backdrop-filter 1s ease-in-out;
+          z-index: 100;
+      }
+      .overlay.visible {
+          opacity: 1;
+          backdrop-filter: blur(8px);
+          transition: opacity 0.5s ease-in-out, backdrop-filter 1s ease-in-out;
+          pointer-events: auto;
+      }
 
   body(ng-cloak).bg-1.fill-height.unselectable
     div(ng-controller='LayoutCtrl', basic-mode, admin-mode, standalone, landscape).fill-height
@@ -40,6 +60,17 @@ html(ng-app='app', data-mdb-theme="dark")
 
     script.
       // Проверяем, что кастомный UI загружен
+      let lastUrl = window.location.href;
+
+      const checkInterval = setInterval(function() {
+        const currentUrl = window.location.href;
+
+        // Если URL изменился
+        if (currentUrl !== lastUrl) {
+            location.reload();
+        }
+      }, 500);
+
       async function waitForElement(id) {
         let element = null;
         let attempts = 0;
@@ -69,6 +100,7 @@ html(ng-app='app', data-mdb-theme="dark")
       waitForElement('deviceWrapper').then(element => {
 
           // overlay
+
           const overlay = document.querySelector('.overlay');
           if (overlay) overlay.classList.remove('visible');
 

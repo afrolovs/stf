@@ -46,7 +46,6 @@ module.exports = angular.module('control-panes', [
           sessionCheck: ['$q', '$route', '$window', function ($q, $route, $window) {
             const sessionToken = $route.current.params.session;
             const serial = $route.current.params.serial;
-            console.log('Current time:', new Date());
 
             if (!sessionToken) {
               console.error('No token, redirecting');
@@ -62,7 +61,10 @@ module.exports = angular.module('control-panes', [
               return $q.reject();
             }
           }]
-        }
+        },
+        forceRefresh: ['$window', function ($window) {
+          $window.location.reload(true);
+        }]
       })
 
       .when('/forced/:serial', {

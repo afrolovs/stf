@@ -66,7 +66,7 @@ module.exports =
             });
           }
         } catch (e) {
-          alert(e.message);
+          alert("Девайс не ответил на попытку отключения. Ничего страшного - просто закрой окно :)");
         }
       }
     };
@@ -192,7 +192,7 @@ module.exports =
     });
 
     $scope.generateWatchUrl = function () {
-      return $window.location.origin + '/watch/' + $routeParams.serial;
+      return $window.location.origin + '/#!/watch/' + $routeParams.serial;
     };
 
     $scope.copyToClipboard = async function () {

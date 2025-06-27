@@ -3,9 +3,9 @@
   //-   .widget-content
   table.table.table-condensed.logcat-filters-table(ng-show='true')
     tr
-      td(width='1%', id='logcat', ng-if="!isWatchMode")
+      td(width='1%', id='logcat', ng-show="!isWatchMode")
         //- button(ng-model='started', uib-btn-checkbox, title='{{"Start/Stop Logging"|translate}}').btn.btn-xs.btn-primary-outline
-        button.btn.btn-outline-secondary(ng-model='started', uib-btn-checkbox, title=' Включить', style="width:110px")
+        button.btn.btn-outline-secondary(ng-model='started', uib-btn-checkbox, title='Включить', style="width:110px")
           span.material-symbols-outlined.me-2(style="font-size: 6px; scale: 2") planner_review
           span(ng-if='started') На  паузу
           span(ng-if='!started') Включить
