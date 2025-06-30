@@ -15,8 +15,7 @@ module.exports =
         var body = element.find('tbody')[0]
         var maxEntriesBuffer = 3000
         var maxVisibleEntries = 100
-        var deviceSerial = (window.location.href).split('/').pop()
-
+        var deviceSerial = (window.location.href.split('#!')[1] || '').split('/')[2]
         scope.started = checkLoggerServiceStatus(true)
         scope.allowClean = checkAllowClean()
 

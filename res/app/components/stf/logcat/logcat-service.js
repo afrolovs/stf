@@ -127,14 +127,14 @@ module.exports = function LogcatServiceFactory(socket, FilterStringService) {
   })
 
   service.clear = function() {
-    var devSerial = (window.location.href).split('/').pop()
+    var devSerial = (window.location.href.split('#!')[1] || '').split('/')[2]
     if (Object.keys(service.deviceEntries).includes(devSerial)) {
       service.deviceEntries[devSerial].logs = []
     }
   }
 
   service.filters.filterLines = function() {
-    var devSerial = (window.location.href).split('/').pop()
+    var devSerial = (window.location.href.split('#!')[1] || '').split('/')[2]
 
     if (Object.keys(service.deviceEntries).includes(devSerial)) {
       service.filters.entries = _.filter(service.deviceEntries[devSerial].logs.entries, filterLine)

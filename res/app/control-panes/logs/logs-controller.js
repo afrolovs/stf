@@ -1,7 +1,6 @@
 module.exports = function LogsCtrl($scope, $rootScope, $routeParams, $location, LogcatService) {
 
   var deviceSerial = $routeParams.serial
-  var cleanDevice = (window.location.href).split('/').pop()
   cleanDeviceSettings()
 
   $scope.started = checkLogBtnStatus() === null ? false : checkLogBtnStatus()
@@ -115,7 +114,7 @@ module.exports = function LogsCtrl($scope, $rootScope, $routeParams, $location, 
   }
 
   $scope.clear = function() {
-    var deviceSerial = (window.location.href).split('/').pop()
+    var deviceSerial = (window.location.href.split('#!')[1] || '').split('/')[2]
     if (Object.keys(LogcatService.deviceEntries).includes(deviceSerial)) {
       for (var i = LogcatService.deviceSerial.length - 1; i >= 0; i++) {
         if (LogcatService.deviceSerial[i] === deviceSerial) {
@@ -129,7 +128,7 @@ module.exports = function LogsCtrl($scope, $rootScope, $routeParams, $location, 
     angular.forEach(props, function(prop) {
       $scope.$watch('filters.' + prop, function(newValue, oldValue) {
         if (!angular.equals(newValue, oldValue)) {
-          var deviceSerial = (window.location.href).split('/').pop()
+          var deviceSerial = (window.location.href.split('#!')[1] || '').split('/')[2]
           LogcatService.filters[prop] = newValue
           if (!Object.keys(LogcatService.deviceEntries).includes(deviceSerial)) {
             LogcatService.initDeviceLogCollector(deviceSerial)

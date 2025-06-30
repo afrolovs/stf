@@ -10,8 +10,9 @@
           span(ng-if='started') На  паузу
           span(ng-if='!started') Включить
       td(width='6%')
-        select.form-select.form-control(style="width: 11rem; height: 26px;padding: 2.5px 12px 3.68px;" ng-model='filters.priority', data-ng-options='l.name for l in filters.levelNumbers')
+        select.form-select.form-control(style="width: 11rem; height: 26px;padding: 2.5px 12px 3.68px;", ng-model='filters.priority', data-ng-options='l.name for l in filters.levelNumbers')
           option(value='') {{"Критичность"}}
+
       //- td(width='10%')
       //-   input(ng-model='filters.date', type='text', placeholder='{{"Time"|translate}}', ng-keyup='validateDate(event=$event)').input-sm.form-control
       //- td(width='8%', ng-if='$root.platform == "native"')
