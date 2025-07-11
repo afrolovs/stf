@@ -6,7 +6,7 @@ module.exports =
       restrict: 'E',
       replace: true,
       template: require('./logcat-table.pug'),
-      link: function(scope, element) {
+      link: function (scope, element) {
         var autoScroll = true
         var autoScrollDependingOnScrollPosition = true
         var scrollPosition = 0
@@ -62,7 +62,7 @@ module.exports =
           element.find('tbody')[0].deleteRow(0)
         }
 
-        LogcatService.addEntryListener = function(entry) {
+        LogcatService.addEntryListener = function (entry) {
           if (deviceSerial === entry.serial) {
             limitVisibleEntries()
             if (LogcatService.deviceEntries[deviceSerial].logs.length > maxEntriesBuffer) {
@@ -72,7 +72,7 @@ module.exports =
           }
         }
 
-        LogcatService.addFilteredEntriesListener = function(entries) {
+        LogcatService.addFilteredEntriesListener = function (entries) {
           checkLoggerServiceStatus()
         }
 
@@ -94,7 +94,7 @@ module.exports =
 
         function scrollToBottom() {
           parent.scrollTop = parent.scrollHeight + 20
-          $timeout(function() {
+          $timeout(function () {
             parent.scrollTop = parent.scrollHeight
           }, 10)
         }
@@ -103,18 +103,22 @@ module.exports =
           var newRow = rowParent.insertRow(-1)
 
           newRow.classList.add('log-' + data.priorityLabel)
+          // newRow.insertCell(-1)
+          //   .appendChild(document.createTextNode(data.priorityLabel))
           newRow.insertCell(-1)
-            .appendChild(document.createTextNode(data.priorityLabel))
-          newRow.insertCell(-1)
-            .appendChild(document.createTextNode(data.dateLabel))
-          if ($rootScope.platform === 'native') {
+            .appendChild(document.createTextNode(data.dateLabel.slice(0, 5)))
+          // if ($rootScope.platform === 'native') {
+            // newRow.insertCell(-1)
+            //   .appendChild(document.createTextNode(data.pid))
+            // newRow.insertCell(-1)
+            //   .appendChild(document.createTextNode(data.tid))
+            var tag = data.tag.slice(0, 12)
+            if (tag.length < data.tag.length) {
+              tag += '…'
+            }
             newRow.insertCell(-1)
-              .appendChild(document.createTextNode(data.pid))
-            newRow.insertCell(-1)
-              .appendChild(document.createTextNode(data.tid))
-            newRow.insertCell(-1)
-              .appendChild(document.createTextNode(data.tag))
-          }
+              .appendChild(document.createTextNode(tag))
+          // }
           newRow.insertCell(-1)
             .appendChild(document.createTextNode(data.message))
 
@@ -130,7 +134,7 @@ module.exports =
           body = newBody
         }
 
-        scope.clearTable = function() {
+        scope.clearTable = function () {
           LogcatService.clear()
           clearTable()
         }
@@ -164,7 +168,7 @@ module.exports =
            * @param {event} event object
            * @returns {None} NaN
            */
-        scope.validateDate = function(e) {
+        scope.validateDate = function (e) {
           var pattern = ['^(?:(?:([0-1]?\\d|2[0-3]):)?(:[0-5]\\d|[0-5]\\d):|\\d)',
             '?(:[0-5]\\d|[0-5]\\d{1,2})?(\\.[0-9]?\\d{0,2}|:[0-5]?\\d{0,1})|(\\d{0,2})'].join([])
           var regex = new RegExp(pattern, 'g')
@@ -172,7 +176,7 @@ module.exports =
           var matchArray = inputValue.match(regex)
           var isTextValid = false
           if (matchArray) {
-            matchArray.forEach(function(item, index) {
+            matchArray.forEach(function (item, index) {
               if (item === inputValue) {
                 isTextValid = true
                 event.srcElement.style.borderColor = ''
@@ -190,17 +194,24 @@ module.exports =
          *
          * @returns {None} NaN
          */
-        scope.saveLogs = function() {
-          var collectedLogs = []
+        // scope.saveLogs = function() {
+        //   var collectedLogs = []
 
+        //   if (Object.keys(LogcatService.deviceEntries).includes(deviceSerial)) {
+        //     collectedLogs = LogcatService.deviceEntries[deviceSerial].logs
+        //   }
+
+        //   SaveLogService.open(collectedLogs, false)
+        // }
+        scope.saveLogs = function () {
+          var collectedLogs = []
           if (Object.keys(LogcatService.deviceEntries).includes(deviceSerial)) {
             collectedLogs = LogcatService.deviceEntries[deviceSerial].logs
           }
-
-          SaveLogService.open(collectedLogs, false)
+          SaveLogService.saveAsLogcat(collectedLogs, deviceSerial)
         }
 
-        scope.$on('$destroy', function() {
+        scope.$on('$destroy', function () {
           parent.removeEventListener('scroll', throttledScrollListener)
         })
       }

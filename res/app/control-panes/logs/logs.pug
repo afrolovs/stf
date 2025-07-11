@@ -21,13 +21,15 @@
       //-   input(ng-model='filters.tid', type='text', placeholder='{{"TID"|translate}}').input-sm.form-control
       //- td(width='14%', ng-if='$root.platform == "native"')
       //-   input(ng-model='filters.tag', type='text', placeholder='{{"Tag"|translate}}').input-sm.form-control
-      td(width='60%')
+      td(width='50%')
         input(style="height: 26px;", ng-model='filters.message', type='text', placeholder='{{"Фильтр (подстрока)"}}').input-sm.form-control
       td(width='0')
         //- button(ng-click='clearTable()', ng-disabled='false', title='{{"Clear"|translate}}').btn.btn-xs.btn-danger-outline
-        button.btn.btn-outline-secondary(ng-click='clearTable()' title='Очистить таблицу')
-          span.material-symbols-outlined.me-2(style="font-size: 6px; scale: 2") delete
-          span Очистить таблицу
+        button.btn.btn-outline-secondary(ng-click='saveLogs()', title='Сохранить в файл', style="min-width: 12px")
+          span.material-symbols-outlined(style="font-size: 6px; scale: 2.5") save
+        span.me-2
+        button.btn.btn-outline-secondary.me-2(ng-click='clearTable()', title='Очистить таблицу', style="min-width: 12px")
+          span.material-symbols-outlined(style="font-size: 6px; scale: 2.5") delete
       //- td(width='0')
       //-   button(ng-click='saveLogs()', ng-disabled='false', title='{{"Save Logs"|translate}}').btn.btn-xs.btn-danger-outline
       //-     i.fa.fa-save
