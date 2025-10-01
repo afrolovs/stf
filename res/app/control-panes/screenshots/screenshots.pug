@@ -1,4 +1,7 @@
 div(ng-controller='ScreenshotsCtrl')
+  h5.mb-3.d-flex.align-items-center Скриншоты
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Захватить кадр с устройства в оригинальном качестве (pixel perfect)<div>Если что-то идёт не так – проверь, что файловая система девайса позволяет писать в <tt>sdcard/Downloads</tt>") help
+
   button.btn.btn-outline-secondary(ng-click='takeScreenShot()', style="margin: 1em 1em 0 0 !important;")
     span.material-symbols-outlined(style="font-size: 7px; scale: 2") screenshot_monitor
     span.ms-3 Сделать скриншот
@@ -17,3 +20,10 @@ div(ng-controller='ScreenshotsCtrl')
           title=`Скриншот от {{ shot.body.date | date:'HH:mm:ss' }}`
           loading="lazy"
         )
+
+  h5.mb-3.mt-3.d-flex.align-items-center Запись экрана
+    span.material-symbols-outlined.ms-2.fs-5.text-muted(data-tippy-content="<p>Записать видео с твоими действиями в формат <tt>webm</tt><div>⚠️ Не забудь разрешить запись экрана в настройках браузера!") help
+
+  button.btn.btn-outline-secondary(id="startRecordBtn", style="margin: 1em 1em 0 0 !important;") Начать запись
+  button.btn.btn-outline-secondary(id="stopRecordBtn") Остановить запись
+  h6.mt-3(id="recordTimer")

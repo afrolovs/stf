@@ -671,7 +671,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
         .side-menu-section(data-panel="screenshots", ng-if="!isWatchMode")
           span.material-symbols-outlined screenshot_monitor
-          span.side-menu-section-title Скриншоты
+          span.side-menu-section-title Скриншоты и видео
 
         .side-menu-section(data-panel="device-info")
           span.material-symbols-outlined info
@@ -718,7 +718,7 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
 
       // Боковая панель - Скриншоты
       .side-panel-content.bg-glass#screenshots
-        h4.mb-5 Скриншоты
+        h4.mb-5 Скриншоты и видео
         div(ng-include='"control-panes/screenshots/screenshots.pug"')
 
       // Боковая панель - Информация о девайсе
@@ -746,9 +746,9 @@ html(lang="ru", data-mdb-theme="dark", data-bs-theme="dark")
     // Нижнее меню
     .bottom-menu.bg-glass
       // Помощь слева
-      .menu-center-left(data-tippy-content="Наша дока в Confluence")
+      .menu-center-left(data-tippy-content="Наша дока в Confluence3")
         span.material-symbols-outlined help
-        span.mattermost-text Помощь
+        a.mattermost-text(href="https://confluence.playteam.ru/x/E9D4EQ" target="_blank") Помощь
 
       // Центральная группа иконок
       .menu-center-group

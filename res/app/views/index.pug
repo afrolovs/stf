@@ -57,6 +57,7 @@ html(ng-app='app', data-mdb-theme="dark")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js")
+    script(src="/static/logo/exports/html2canvas.min.js")
 
     script.
       // Проверяем, что кастомный UI загружен
@@ -144,6 +145,88 @@ html(ng-app='app', data-mdb-theme="dark")
           help_modal.setAttribute('data-tippy-content', htmlHelp);
           singleton.show(help_modal);
           singleton.setContent(htmlHelp);
+
+          // Запись экрана
+
+          let mediaRecorder;
+          let stream;
+          let timerInterval;
+          let startTime;
+
+          async function startRecording() {
+            alert('Ждём деплоя на HTTPS: запись пока недоступна ;(')
+            return
+
+            try {
+              // Запрашиваем доступ к экрану
+              stream = await navigator.mediaDevices.getDisplayMedia({
+                video: { mediaSource: 'screen' }
+              });
+
+              // Создаем MediaRecorder
+              mediaRecorder = new MediaRecorder(stream);
+              const chunks = [];
+
+              mediaRecorder.ondataavailable = e => chunks.push(e.data);
+
+              mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'screen-recording.webm';
+                a.click();
+
+                // Очищаем таймер
+                clearInterval(timerInterval);
+                recordTimer.textContent = '';
+
+                // Останавливаем все треки
+                stream.getTracks().forEach(track => track.stop());
+              };
+
+              // Запускаем запись
+              mediaRecorder.start();
+              startTime = Date.now();
+
+              // Обновляем таймер каждую секунду
+              timerInterval = setInterval(updateTimer, 1000);
+
+              // Меняем состояние кнопок
+              startRecordBtn.disabled = true;
+              stopRecordBtn.disabled = false;
+
+            } catch (err) {
+              alert(err);
+              startRecordBtn.disabled = false;
+              stopRecordBtn.disabled = true;
+            }
+          }
+
+          function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+              mediaRecorder.stop();
+            }
+          }
+
+          function updateTimer() {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+            const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+            recordTimer.textContent = `Идёт запись: ${minutes}:${seconds}`;
+          }
+
+          // Назначаем обработчики кнопок
+          const startRecordBtn = document.getElementById('startRecordBtn');
+          const stopRecordBtn = document.getElementById('stopRecordBtn');
+          const recordTimer = document.getElementById('recordTimer');
+
+          startRecordBtn.addEventListener('click', startRecording);
+          stopRecordBtn.addEventListener('click', stopRecording);
+
+          // Инициализируем состояние кнопок
+          stopRecordBtn.disabled = true;
+          recordTimer.textContent = '';
 
           // Оснастка по UI
 

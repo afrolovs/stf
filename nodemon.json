@@ -8,7 +8,7 @@
   "ignore": [
     "node_modules"
   ],
-  "exec": "stf local --adb-host adb --public-ip 192.168.2.35 --provider-min-port 7400 --provider-max-port 7500 --allow-remote",
+  "exec": "stf local --port 7400 --adb-host adb  --websocket-port 7401 --provider-min-port 7402 --provider-max-port 7500 --public-ip android-stf.okko.team --no-cleanup",
   "events": {
     "restart": "npm run build"
   }

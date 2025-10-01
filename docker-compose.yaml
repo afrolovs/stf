@@ -28,10 +28,10 @@ services:
       - TZ='Europe/Moscow'
       - RETHINKDB_PORT_28015_TCP=tcp://rethinkdb:28015
       - SCREEN_GRABBER=minicap-bin
-      - DEVICE_FARM_URL=http://192.168.2.35:7100/#!/devices_legacy
+      - DEVICE_FARM_URL=http://device-ranch.spb.dc/android/
       - FARM_IS_TV_MODE=false
     restart: unless-stopped
-    command: stf local --adb-host adb --public-ip 192.168.2.35 --provider-min-port 7400 --provider-max-port 7500
+    command: stf local --port 443 --adb-host adb --provider-min-port 7400 --provider-max-port 7500
 
 volumes:
   rethinkdb-data: {}

@@ -31,8 +31,8 @@ module.exports = function(config) {
     },
     webpackServer: {
       debug: true,
-      devtool: 'inline-source-map',
-//      devtool: 'eval',
+      // devtool: 'inline-source-map',
+     devtool: false,
       stats: false
 //      stats: {
 //        colors: true

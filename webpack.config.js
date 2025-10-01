@@ -10,14 +10,21 @@ var log = require('./lib/util/logger').createLogger('webpack:config')
 
 module.exports = {
   webpack: {
-    mode: 'none'
+    mode: 'none',
+    optimization: {
+      minimize: false, // Отключаем минификацию (или настраиваем Terser вручную)
+      concatenateModules: false, // Важно для AngularJS!
+      splitChunks: {
+        chunks: 'all',
+      },
+    }
     , context: __dirname
     , cache: true
     , entry: {
-        app: pathutil.resource('app/app.js')
-        , authldap: pathutil.resource('auth/ldap/scripts/entry.js')
-        , authmock: pathutil.resource('auth/mock/scripts/entry.js')
-      }
+      app: pathutil.resource('app/app.js')
+      , authldap: pathutil.resource('auth/ldap/scripts/entry.js')
+      , authmock: pathutil.resource('auth/mock/scripts/entry.js')
+    }
     , output: {
         path: pathutil.resource('build')
         , publicPath: '/static/app/build/'
@@ -97,7 +104,7 @@ module.exports = {
       ]
       , devtool: 'eval'
       , stats: {
-          colors: true
-      }
+    colors: true
   }
+}
 }
