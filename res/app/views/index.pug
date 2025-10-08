@@ -276,29 +276,23 @@ html(ng-app='app', data-mdb-theme="dark")
           // Функция инициализации
           function init() {
               sideMenu.classList.toggle('expanded');
-              window.addEventListener('resize', updateLayout);
           }
 
           // Функция для обновления макета
+          function forceLayoutUpdate() {
+            window.dispatchEvent(new Event('resize'));
+          }
+
           function updateLayout() {
+              setTimeout(() => {
+                forceLayoutUpdate();
+              }, 50);
+
               const sideMenuWidth = sideMenu.offsetWidth;
               const panelWidth = currentActivePanel ? currentActivePanel.offsetWidth : 0;
 
               // Обновляем ширину wrapper устройства
               deviceWrapper.style.width = `calc(100% - ${sideMenuWidth + panelWidth}px)`;
               deviceWrapper.style.marginRight = `${panelWidth}px`;
-
-              // Автомасштабирование экрана, чтобы он помещался в доступное пространство
-              const containerWidth = deviceWrapper.offsetWidth - 150; // минус padding
-              const containerHeight = deviceWrapper.offsetHeight - 150;
-
-              const deviceWidth = parseInt(deviceWrapper.style.width);
-              const deviceHeight = parseInt(deviceWrapper.style.height);
-
-              const widthScale = containerWidth / deviceWidth;
-              const heightScale = containerHeight / deviceHeight;
-              currentScale = Math.min(widthScale, heightScale);
-
-              deviceWrapper.style.transform = `scale(${currentScale})`;
           }
       });
